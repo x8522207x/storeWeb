@@ -1,0 +1,722 @@
+@charset "utf-8";
+@media (min-width:1441px) {
+    .index-content-wrapper,
+    .collection-list-wrapper,
+    .site-list-wrapper,
+    .technical-list-wrapper,
+    .union-list-wrapper,
+    .page-misc-recommend-wrapper {
+        width: 86%;
+        margin: 0 7%;
+    }
+    .index-catalogs-title-wrapper {
+        width: 80%!important;
+        margin: 0 10% 40px 10%!important;
+    }
+    .mode-switch {
+        width: 90%;
+        margin: 8px 5%;
+    }
+    .header-position {
+        width: 78%;
+        padding: 0;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    .crumb {
+        width: 78%;
+        padding: 8px 11%;
+    }
+}
+
+@media (max-width: 1440px) {
+    .index-content-wrapper,
+    .collection-list-wrapper,
+    .site-list-wrapper,
+    .technical-list-wrapper,
+    .union-list-wrapper,
+    .page-misc-recommend-wrapper,
+    .mode-switch {
+        width: 90%;
+        margin: 0 5%;
+    }
+    .index-catalogs-title-wrapper {
+        width: 90%;
+        margin: 0 5% 40px 5%;
+    }
+}
+
+@media (max-width:1280px) {
+    .index-content .index-news .unit_title .title-line-left,
+    .index-content .index-news .unit_title .title-line-right,
+    .index-collection .unit_title .title-line-left,
+    .index-collection .unit_title .title-line-right,
+    .index-applications .unit_title .title-line-left,
+    .index-applications .unit_title .title-line-right,
+    .index-catalogs .unit_title .title-line-left,
+    .index-catalogs .unit_title .title-line-right {
+        width: 25%;
+        height: 26px;
+        display: inline-block;
+        background: url(../images/title_line.png) 0 center repeat-x;
+    }
+}
+
+@media (max-width:1024px) {
+    html,
+    body {
+        overflow-x: hidden;
+    }
+    .wrapper {
+        width: 100%;
+        min-width: initial;
+    }
+    .index-ad {
+        float: none;
+        width: 100%;
+    }
+    .index-ad .index-slider {
+        width: 100%;
+    }
+    .index-ad .index-slider img {
+        width: 100%;
+    }
+    .index-news,
+    .index-faq {
+        float: right;
+    }
+    .index-links-list li {
+        width: 14%;
+        float: left;
+        margin: 10px 0 10px 21px;
+    }
+    .index-links-list li img {
+        width: 100%;
+    }
+    .fat-footer {
+        width: 60%;
+    }
+    .footer-info {
+        width: 35%
+    }
+    .index-applications-list li .txt {
+        width: 50%;
+    }
+    .page-misc-recommend-list li {
+        width: 23.5%;
+        margin: 0 0 0 2%;
+    }
+    .site-other-info .info-section dd {
+        width: 100%;
+        float: left;
+    }
+    .collection-list-block .pic,
+    .union-list-block .pic,
+    .site-list-block .pic {
+        width: 25%;
+    }
+    .collection-list-block .collection-list-content,
+    .union-list-block .union-list-content,
+    .site-list-block .site-list-content {
+        float: right;
+        width: 65%;
+    }
+    .collection-detail,
+    .union-detail,
+    .site-detail {
+        width: 90%;
+        margin: 0;
+        padding: 30px 5%;
+    }
+    .unit-heading {
+        width: 100%;
+        margin: 0;
+    }
+    .union-detail .union-detail-list,
+    .site-detail .site-detail-list {
+        width: 64%;
+    }
+    .page-misc-recommend {
+        width: 100%;
+        margin: 0;
+    }
+    .page-misc-collection-list-block-left {
+        float: left !important;
+        margin-left: 0 !important;
+    }
+    .page-misc-collection-list-block {
+        float: right;
+        width: 43.5%;
+        margin: 16px 0 16px 2%;
+    }
+    .page-misc-collection-list-block img {
+        float: left;
+        width: 100%;
+        max-width: inherit;
+        margin: 0 0 10px 0;
+    }
+    .page-misc-collection-list-block .title {
+        width: 100%;
+    }
+    .page-misc-collection-list-block .txt {
+        float: left;
+        width: 100%;
+    }
+    
+    .index-content-wrapper,
+    .collection-list-wrapper,
+    .site-list-wrapper,
+    .technical-list-wrapper,
+    .union-list-wrapper,
+    .page-misc-recommend-wrapper {
+        width: 96%!important;
+        margin: 0 2%!important;
+    }
+    .index-catalogs-title-wrapper {
+        width: 80%!important;
+        margin: 0 10% 40px 10%!important;
+    }
+    .mode-switch {
+        width: 98%;
+        margin: 0 1%;
+    }
+    .header-position {
+        width: 94%;
+        padding: 0;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+    .crumb {
+        width: 94%;
+        padding: 8px 3%;
+    }
+    .grid {
+        width: 100%;
+        margin: 0 auto;
+        padding: 0;
+        overflow: hidden;
+    }
+    .grid-item {
+        width: 30%;
+        margin: 0 1% 30px 1%;
+    }
+    .collection-list-wrapper {
+        padding: 20px 0;
+    }
+}
+
+@media (max-width:984px) {
+    .index-catalogs-list li {
+        width: 14.17%;
+        float: left;
+        margin: 0 1px 1px 0;
+        background: #000;
+        position: relative;
+    }
+}
+
+@media (max-width:945px) {
+    .header .main-nav {
+        padding: 0;
+    }
+    .index-catalogs-list li {
+        width: 12.38%;
+    }
+}
+
+@media (max-width:875px) {
+    .wrapper {
+        width: 100%;
+    }
+    .index-ad {
+        float: none;
+        width: 100%;
+    }
+    .header-position {
+        padding: 0 2%;
+        width: 96%;
+    }
+    .index-catalogs-list li {
+        width: 16.5%;
+    }
+}
+
+@media (max-width:806px) {
+    .page-misc-collection-list-block {
+        float: right;
+        width: 42.5%;
+        margin: 16px 0 16px 2%;
+    }
+}
+
+@media (max-width:768px) {
+    .wrapper {
+        width: 100%;
+    }
+    .header {
+        display: none;
+    }
+    .rwd-header {
+        display: block;
+        height: 80px;
+    }
+    .rwd-logo {
+        width: 308px;
+    }
+    .rwd-nav-btn {
+        width: 10%;
+        padding: 24px 0;
+    }
+    .footer {
+        width: 100%;
+        padding: 0;
+    }
+    .footer-content {
+        padding: 0;
+    }
+    .fat-footer {
+        float: left;
+        width: 100%;
+        font-size: 18px;
+    }
+    .fat-footer .col li.title {
+        padding-left: 3%;
+        background: none;
+    }
+    .fat-footer .col li.title a {
+        font-size: 20px;
+    }
+    .fat-footer .col {
+        width: 100%;
+        margin-right: 0;
+        padding-bottom: 0;
+        /*border-bottom: 1px solid #61c5c0;*/
+    }
+    .fat-footer .col li:first-child {
+        border-top: 0;
+    }
+    .fat-footer .col li {
+        width: 94%;
+        padding: 18px 5.2%;
+        border-bottom: 1px solid #777;
+        background: url(../images/rwd_fat_footer_arr.png) 3% center no-repeat;
+    }
+    .footer-info {
+        float: left;
+        text-align: left;
+        width: 90%;
+        margin: 0 0 15px 25px;
+        font-size: 20px;
+    }
+    .footer-nav {
+        float: left;
+        width: 100%;
+    }
+    .footer-nav li {
+        text-align: left;
+        float: left;
+        width: 92%;
+        padding: 15px 4%;
+        border-right: 0;
+        border-bottom: 1px #fff solid;
+    }
+    .footer-nav li:first-child {
+        border-left: 0;
+        border-top: 1px #fff solid;
+    }
+    .footer-info-content {
+        float: left;
+        width: 94%;
+        margin-top: 20px;
+        padding: 0 3%;
+        font-size: 14px;
+        text-align: center;
+    }
+    .footer-info-content span {
+        margin: 15px 0;
+    }
+    .footer-info .footer-social-icon {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 32%;
+        text-align: center;
+        width: 40%;
+    }
+    .index-NPO-search,
+    .index-news,
+    .index-category,
+    .index-faq {
+        width: 100%;
+        height: auto;
+    }
+    .index-content-inner {
+        float: left;
+        width: 93.6%;
+    }
+    .index-links-list {
+        float: none;
+        margin: 0 auto;
+        width: 89%;
+    }
+    .index-links-list li {
+        width: 31%;
+        float: none;
+        display: inline-block;
+        margin: 5px;
+    }
+    .index-news-list li .date {
+        width: 50%;
+    }
+    .index-applications-list li .index-applications-list-title {
+        width: 100%;
+        float: left;
+        height: 40px;
+        overflow: hidden;
+        margin-bottom: 5px;
+    }
+    .index-applications-list li .txt {
+        float: left;
+        width: 100%;
+        color: #333;
+        margin-top: 10px;
+        font-size: 13px;
+        line-height: 18px;
+    }
+    .index-applications-list li .app-icon {
+        margin-left: 25%;
+    }
+    .index-content .unit_title h1 {
+        display: inline-block;
+        text-align: center;
+        padding: 0 30px;
+        font-weight: bold;
+    }
+    .page-content {
+        margin: 80px 0 0 0;
+    }
+    .collection-list li,
+    .union-list li,
+    .technical-list li,
+    .site-list li {
+        width: 47%;
+    }
+    .site-detail .site-detail-list {
+        width: 100%;
+    }
+    .site-detail .site-other-info {
+        float: left;
+        width: 90%;
+        padding: 30px 5%;
+    }
+    .union-detail .union-detail-list,
+    .site-detail .site-detail-list {
+        width: 100%;
+    }
+    .union-detail .union-other-info {
+        float: left;
+        width: 90%;
+        padding: 30px 5%;
+        line-height: 24px;
+        color: #333;
+        background: #fafafa;
+        font-size: 14px;
+    }
+    .page-misc-recommend-list li {
+        width: 48%;
+        margin: 0 1% 10px 1%;
+    }
+    .page-misc-recommend-list li:first-child {
+        margin: 0 1% 0 1%;
+    }
+    .grid-item {
+        width: 48%;
+        margin: 0 1% 30px 1%;
+    }
+}
+
+@media (max-width:695px) {
+    .index-news-list li {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .index-more-btn a {
+        width: 22%;
+    }
+    .index-collection-list li {
+        width: 49%;
+    }
+}
+
+@media (max-width:690px) {
+    .index-links-list li {
+        width: 47%;
+    }
+}
+
+@media (max-width:683px) {
+    .page-misc-collection-list-block {
+        float: right;
+        width: 41.5%;
+        margin: 16px 0 16px 1%;
+    }
+}
+
+@media (max-width:669px) {
+    .index-content .unit_title h1 {
+        font-size: 30px;
+    }
+    .index-content .index-news .unit_title .title-line-left,
+    .index-content .index-news .unit_title .title-line-right,
+    .index-collection .unit_title .title-line-left,
+    .index-collection .unit_title .title-line-right,
+    .index-applications .unit_title .title-line-left,
+    .index-applications .unit_title .title-line-right,
+    .index-catalogs .unit_title .title-line-left,
+    .index-catalogs .unit_title .title-line-right {
+        width: 21%;
+        height: 26px;
+        display: inline-block;
+        background: url(../images/title_line.png) 0 center repeat-x;
+    }
+}
+
+@media (max-width:555px) {
+    .page-misc-collection-list-block {
+        float: right;
+        width: 40%;
+        margin: 16px 0 16px 1%;
+    }
+}
+
+@media (max-width:528px) {
+    .index-links-list li {
+        width: 46.7%;
+    }
+    .index-applications-list li {
+        width: 41%;
+        float: left;
+        padding-left: 4%;
+        padding-right: 4%;
+        margin-left: 0%;
+        margin-bottom: 30px;
+        border-left: 1px #dadada solid;
+    }
+    .index-applications-list li:nth-child(odd) {
+        float: left;
+        padding-left: 4%;
+        padding-right: 4%;
+        margin-left: 0%;
+        border-left: 0;
+    }
+    .index-applications-list li .app-icon {
+        margin-left: 32%;
+    }
+    .page-misc-catalogs-item a {
+        font-size: 14px;
+        margin: 0 3px 3px 0;
+    }
+}
+
+@media (max-width:480px) {
+    .rwd-logo {
+        width: 58%;
+        margin: 17px 0 2% 3%;
+    }
+    .rwd-nav-btn {
+        width: 16%;
+        padding: 24px 0;
+    }
+    .index-content,
+    .page-content {
+        width: 100%;
+        padding: 0;
+    }
+    .index-NPO-search,
+    .index-news,
+    .index-category,
+    .index-faq {
+        margin: 17px 17px 0 17px;
+        height: auto;
+        width: initial;
+    }
+    .index-links {
+        width: initial;
+        margin: 20px 17px;
+    }
+    .index-links-list li {
+        width: 97%;
+    }
+    .index-collection-list li {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .index-content .index-news .unit_title .title-line-left,
+    .index-content .index-news .unit_title .title-line-right,
+    .index-collection .unit_title .title-line-left,
+    .index-collection .unit_title .title-line-right,
+    .index-applications .unit_title .title-line-left,
+    .index-applications .unit_title .title-line-right,
+    .index-catalogs .unit_title .title-line-left,
+    .index-catalogs .unit_title .title-line-right {
+        width: 12%;
+        height: 26px;
+        display: inline-block;
+        background: url(../images/title_line.png) 0 center repeat-x;
+    }
+    .index-content .unit_title {
+        margin: 0 auto 20px auto;
+    }
+    .index-news {
+        padding: 10px 0;
+    }
+    .index-collection {
+        padding: 15px 0;
+    }
+    .index-applications {
+        padding: 15px 0;
+    }
+    .index-more-btn {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    .index-more-btn a {
+        width: 50%;
+    }
+    .fat-footer .col li {
+        width: 90%;
+        padding: 18px 10%;
+        background: url(../images/rwd_fat_footer_arr.png) 28px center no-repeat;
+    }
+    .index-applications-list li {
+        width: 100%;
+        float: left;
+        padding-left: 0;
+        margin-left: 0;
+        margin-bottom: 30px;
+        border-left: none;
+    }
+    .index-applications-list li .app-icon {
+        margin-left: 0;
+    }
+    .index-applications-list li .txt {
+        float: right;
+        width: 75%;
+    }
+    .index-applications-list li .index-applications-list-title {
+        width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+    .index-catalogs-list li {
+        width: 33%;
+    }
+    .collection-list li,
+    .union-list li,
+    .technical-list li,
+    .site-list li {
+        width: 97%;
+    }
+    .index-applications-list li:nth-child(odd) {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .collection-list-block .pic,
+    .union-list-block .pic,
+    .site-list-block .pic {
+        width: 90%;
+        margin: 0 5%;
+    }
+    .collection-list-block .collection-list-content,
+    .union-list-block .union-list-content,
+    .site-list-block .site-list-content {
+        float: left;
+        width: 90%;
+        margin: 10px 5%;
+    }
+    .union-detail {
+        padding: 10px 5% 30px 5%;
+    }
+    .union-detail .detail-title li .item {
+        width: 100%;
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #000;
+        font-size: 18px;
+    }
+    .page-misc-collection-list-block {
+        float: left;
+        width: 90%;
+        margin: 16px 0;
+        padding: 20px 5%;
+    }
+    .page-misc-recommend-list li {
+        width: 100%;
+        margin: 0 0 10px 0;
+    }
+    .page-misc-recommend-list li:first-child {
+        margin: 0 0 10px 0;
+    }
+    .grid-item {
+        width: 98%;
+        margin: 0 1% 30px 1%;
+    }
+    .mode-switch {
+        width: 98%;
+        margin: 0 1%;
+    }
+}
+
+@media (max-width:320px) {
+    .rwd-logo {
+        width: 70%;
+        margin: 17px 0 2% 3%;
+    }
+    .rwd-header {
+        height: 76px;
+    }
+    .rwd-nav-btn {
+        width: 20%;
+        padding: 18px 0;
+    }
+    .footer-info-content {
+        font-size: 15px;
+    }
+    .rwd-nav-row {
+        font-size: 1.4em;
+    }
+    .rwd-sub-nav {
+        font-size: 20px;
+    }
+    .rwd-nav-row .rwd-sub-nav li a {
+        display: block;
+        width: 86%;
+        padding: 0 0 20px 18%;
+        background: url(../images/rwd_arr_open.png) 20px 3px no-repeat;
+    }
+    .index-applications-list li .txt {
+        float: right;
+        width: 67%;
+    }
+    .fat-footer .col li {
+        width: 90%;
+        padding: 18px 8%;
+        border-bottom: 1px solid #33b5ae;
+        background: url(../images/rwd_fat_footer_arr.png) 13px 25px no-repeat;
+    }
+    .index-content .index-news .unit_title .title-line-left,
+    .index-content .index-news .unit_title .title-line-right,
+    .index-collection .unit_title .title-line-left,
+    .index-collection .unit_title .title-line-right,
+    .index-applications .unit_title .title-line-left,
+    .index-applications .unit_title .title-line-right,
+    .index-catalogs .unit_title .title-line-left,
+    .index-catalogs .unit_title .title-line-right {
+        display: none;
+    }
+    .index-content .unit_title h1 {
+        font-size: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #000;
+    }
+}
