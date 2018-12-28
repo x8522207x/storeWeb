@@ -15,69 +15,72 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
 </head>
 <body>
-  <div class="container" id="app">
-    <form class="register-form" role="form" method="POST" id="form1">
+  <div class="container">
+    <form class="register-form" role="form"  method="POST" id="form1">
       <div class="rg-back-login"><a href="login.jsp">回登入頁</a></div>
 	  <input type="hidden" name="op" value="add">
 	  <h2 class="form-signin-heading text-center">註冊</h2>
 	  <label for="inputName">姓名</label> 
 	  <input type="text" id="ip-name" name="name" class="form-control" placeholder="">
-	  <span class="danger" id="ipn">請輸入姓名</span>
+	  <span class="danger" id="ipn" style="color:red;">請輸入姓名</span>
 	  <br>
 	  <label for="inputStudentNumber" class="margin-top-20">帳號</label>
 	  <input type="text" id="ip-account" name="account" class="form-control" placeholder="">
-	  <span class="danger" id="ipa">請輸入帳號(7個字元以上)</span>
-	  <button id="bc" type="button" disabled>檢查重複</button>
+	  <span class="danger" id="ipa" style="color:red;">請輸入帳號(7個字元以上)</span>
+	  <button type="button" id="bc" disabled>檢查重複</button>
 	  <br>
 	  <label for="inputPassword">密碼</label> 
 	  <input type="password" id="ip-password" name="password" class="form-control" placeholder="">
-	  <span class="danger" id="ip1">請輸入至少 8 個字元以上</span>
+	  <span class="danger" id="ip1" style="color:red;">請輸入至少 8 個字元以上</span>
 	  <br>
 	  <label for="inputPassword2">再次輸入密碼</label> 
 	  <input type="password" id="ip-password-2" class="form-control" name="password2" placeholder="">
-	  <span class="danger" id="ip2" hidden>兩次密碼輸入不一致</span>
+	  <span class="danger" id="ip2" style="color:red;" >兩次密碼輸入不一致</span>
 	  <br>
 	  <label for="inputEmail">E-Mail</label> 
 	  <input type="text" id="ip-email" name="email" class="form-control" placeholder="">
-	  <span class="danger" id="ipe">請輸入有效的 email</span>
+	  <span class="danger" id="ipe" style="color:red;">請輸入有效的 Email</span>
 	  <br>
-	  <label for="inputDepart">辦公室</label> 
-	  <input type="text" id="ip-depart" name="org" class="form-control" placeholder="">
-	  <span class="danger" id="ipd">請輸入辦公室</span>
+	  <label for="inputDepart">工作時間</label> 
 	  <br>
-	  <button class="btn btn-lg btn-primary btn-block margin-top-20" id="final"  type="button" onclick="register()" disabled>註冊帳號</button>
+	  <select id="workTime">
+		  <option value="morning">12:00 a.m. ~8:00 a.m.</option>
+		  <option value="noon">8:00 a.m. ~4:00 p.m.</option>
+		  <option value="night">4:00 p.m. ~12:00 a.m.</option>
+	  </select>
+	  <button class="btn btn-lg btn-primary btn-block margin-top-20" id="final"  type="button" onclick="register()"  disabled>註冊帳號</button>
 	</form>
   </div>
 </body>
 </html>
-<script>
+<script type="text/javascript">
 	var nameInput = document.getElementById('ip-name');
 	var passwordInput = document.getElementById('ip-password');
 	var passwordInput2 = document.getElementById('ip-password-2');
 	var emailInput = document.getElementById('ip-email');
-	var departInput = document.getElementById('ip-depart');
 	var accountInput = document.getElementById('ip-account');
-	departInput.onkeyup = function(e){
-		if( departInput.value.length > 0){
-			document.getElementById('ipd').setAttribute('hidden','hidden');
-		}else{
-			document.getElementById('ipd').removeAttribute('hidden');
-		}
-	}
+	var workTime = document.getElementById('workTime');
 	accountInput.onkeyup = function(e){
 		if( accountInput.value.length > 6){
 			document.getElementById('ipa').setAttribute('hidden','hidden');
 			document.getElementById('bc').removeAttribute('disabled');
+		}else{
+			document.getElementById('ipa').removeAttribute('hidden');
+			document.getElementById('bc').setAttribute('disabled','disabled');
 		}
 	}
 	nameInput.onkeyup = function(e){
 		if( nameInput.value.length > 0){
 			document.getElementById('ipn').setAttribute('hidden','hidden');
+		}else{
+			document.getElementById('ipn').removeAttribute('hidden');
 		}
 	}
 	passwordInput.onkeyup = function(e){
-		if(passwordInput.value.length >= 8){
+		if(passwordInput.value.length > 7){
 			document.getElementById('ip1').setAttribute('hidden','hidden');
+		}else{
+			document.getElementById('ip1').removeAttribute('hidden');
 		}
 	}
 	passwordInput2.onkeyup = function (e) {
@@ -99,31 +102,34 @@
 		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 		return re.test(String(email).toLowerCase());
 	}
+	
 	function register(){
+		console.log(workTime.value);
 		if( nameInput.value.length === 0 || passwordInput.value.length === 0 || passwordInput2.value.length === 0 || emailInput.value.length === 0 || departInput.value.length === 0 || accountInput.value.length === 0){
 			alert("還有欄位未填");
 		}else if( nameInput.value.length > 0 && passwordInput.value.length > 7 && passwordInput2.value.length > 7 && emailInput.value.length > 0 && departInput.value.length > 0 && accountInput.value.length>6){
+			var register = "true";
 			$.ajax({
-				url: 'api/math/tAccountDB.jsp',
+				url: 'api/store/sAccountDB.jsp',
 				type: 'POST',
 				async: false,
 				data: {
-					"register"  : "true",
+					"register"  : register,
 					"account"	: accountInput.value,
 					"password"	: passwordInput.value,
 					"email"	: emailInput.value,
 					"name"	: nameInput.value,
-					"Dept"	: departInput.value
+					"workTime" : workTime.value
 				},
 			});
 			alert("恭喜註冊成功!即將跳回登入頁");
-			window.location = "http://localhost:8080/math/login.jsp";
+			window.location = "http://localhost:8080/store/login.jsp";
 		}
 	}
 	
 	$("#bc").click(function(){
 		$.ajax({
-				url: 'api/math/tAccountDB.jsp',
+				url: 'api/store/sAccountDB.jsp',
 				type: 'POST',
 				data: {
 					"check"  : "true",
@@ -138,7 +144,9 @@
 				}
 		});
     }); 
-</script> 
+
+
+</script>
 <style>
 body {
    background-color: #cccccc;

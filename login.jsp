@@ -18,21 +18,21 @@
   <div class="container">
     <h2 class="form-signin-heading text-center" style="color:#ff9933;background:#000;display:block;">超商店員排班系統</h2>
 	<h2 class="form-signin-heading text-center" style="color:#ff9933;background:#000;display:block;">登入身分</h2>
-	<h3 class="form-signin-heading text-center"><button id="student"  onclick="studentLog()" >員工</button><button id="teacher" onclick="teacherLog()" class="form-signin-heading text-center">老闆</button></h3>
+	<h3 class="form-signin-heading text-center"><button id="staff"  onclick="studentLog()" >員工</button><button id="boss" onclick="teacherLog()" class="form-signin-heading text-center">老闆</button></h3>
   </div>
   <div class="container" id="studentLogin" hidden>
     <form class="form-signin" role="form" method="POST" >
 	  <h2 class="form-signin-heading text-center" style="color:#ff9933;background:#000;display:block;">員工</h2>
 	  <br>
 	  <label for="inputEmail" class="sr-only">帳號</label> 
-	  <input type="text" id="student-account" class="form-control" placeholder="帳號"  autofocus required name="account" >
+	  <input type="text" id="staff-account" class="form-control" placeholder="帳號"  autofocus required name="account" >
 	  <br>
 	  <label for="inputPassword" class="sr-only">密碼</label> 
-	  <input type="password" id="student-password" class="form-control" placeholder="密碼" required name="password" >
+	  <input type="password" id="staff-password" class="form-control" placeholder="密碼" required name="password" >
 	  <br>
 	  <button class="btn btn-lg btn-primary btn-block" id="sLogin" type="button">登入</button>
 	  <br>
-	  <div class="text-right margin-top--20" style="color:#ff9933;background:#000;display:inline-block;">還沒有帳號？我要 <a href="studentRegister.jsp">註冊</a></div>
+	  <div class="text-right margin-top--20" style="color:#ff9933;background:#000;display:inline-block;">還沒有帳號？我要 <a href="staffRegister.jsp">註冊</a></div>
 	</form>
   </div>
   <div class="container" id="teacherLogin" hidden>
@@ -40,14 +40,14 @@
 	  <h2 class="form-signin-heading text-center" style="color:#ff9933;background:#000;display:block;">老闆</h2>
 	  <br>
 	  <label for="inputEmail" class="sr-only">帳號</label> 
-	  <input type="text" id="teacher-account" class="form-control" placeholder="帳號"  autofocus required name="account" >
+	  <input type="text" id="boss-account" class="form-control" placeholder="帳號"  autofocus required name="account" >
 	  <br>
 	  <label for="inputPassword" class="sr-only">密碼</label> 
-	  <input type="password" id="teacher-password" class="form-control" placeholder="密碼" required name="password" >
+	  <input type="password" id="boss-password" class="form-control" placeholder="密碼" required name="password" >
 	  <br>
-	  <button class="btn btn-lg btn-primary btn-block" id="tLogin" type="button">登入</button>
+	  <button class="btn btn-lg btn-primary btn-block" id="bLogin" type="button">登入</button>
 	  <br>
-	  <div class="text-right margin-top--20" style="color:#ff9933;background:#000;display:inline-block;">還沒有帳號？我要 <a href="teacherRegister.jsp">註冊</a></div>
+	  <div class="text-right margin-top--20" style="color:#ff9933;background:#000;display:inline-block;">還沒有帳號？我要 <a href="bossRegister.jsp">註冊</a></div>
 	</form>
   </div>
 </body>
@@ -65,13 +65,13 @@
 		var redirect = false;
 		var user = "";
 		$.ajax({
-			url: 'api/math/sAccountDB.jsp',
+			url: 'api/store/sAccountDB.jsp',
 			type: 'POST',
 			async: false,
 			data: {
 				"sLogIn"  : "true",
-				"account"	: $("#student-account").val(),
-				"password"	: $("#student-password").val(),
+				"account"	: $("#staff-account").val(),
+				"password"	: $("#staff-password").val(),
 			},
 		}).done(function (data){
 			if(data.includes("true") === true){
@@ -84,22 +84,22 @@
 			}
 		});
 		if(redirect === true){
-			setCookie('identity','student', 30);
+			setCookie('identity','staff', 30);
 			setCookie('user',user, 30);
-			$(location).attr('href','http://localhost:8080/math/lobby.jsp')
+			$(location).attr('href','http://localhost:8080/store/lobby.jsp')
 		}
 	})
-	$("#tLogin").click(function(){
+	$("#bLogin").click(function(){
 		var redirect = false;
 		var user = "";
 		$.ajax({
-			url: 'api/math/tAccountDB.jsp',
+			url: 'api/store/tAccountDB.jsp',
 			type: 'POST',
 			async: false,
 			data: {
-				"tLogIn"  : "true",
-				"account"	: $("#teacher-account").val(),
-				"password"	: $("#teacher-password").val(),
+				"bLogin"  : "true",
+				"account"	: $("#boss-account").val(),
+				"password"	: $("#boss-password").val(),
 			},
 		}).done(function (data){
 			if(data.includes("true") === true){
@@ -112,9 +112,9 @@
 			}
 		});
 		if(redirect === true){
-			setCookie('identity','teacher', 30);
+			setCookie('identity','boss', 30);
 			setCookie('user',user, 30);
-			$(location).attr('href','http://localhost:8080/math/lobby.jsp')
+			$(location).attr('href','http://localhost:8080/store/lobby.jsp')
 		}
 	})
 	function setCookie(cname, cvalue, exdays) {
