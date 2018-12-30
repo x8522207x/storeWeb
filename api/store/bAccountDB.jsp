@@ -7,20 +7,19 @@ DBText a = new DBText();
 String account	= request.getParameter("account");
 String register = (request.getParameter("register") == null)? "" :request.getParameter("register");
 String check = (request.getParameter("check") == null)? "" :request.getParameter("check");
-String tLogIn = (request.getParameter("tLogIn") == null)? "" :request.getParameter("tLogIn");
+String bLogIn = (request.getParameter("bLogIn") == null)? "" :request.getParameter("bLogIn");
 a.connection();
 boolean result = true;
 if(register.equals("true")){
 	String password	= request.getParameter("password");
 	String email	= request.getParameter("email");
-	String name	= request.getParameter("name");
-	String Dept	= request.getParameter("Dept");		
-	if(account != null && Dept!= null){
-		a.executeSQLInsert("INSERT INTO `teacher-account`( `account`, `password`, `email`, `name`, `office`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+Dept+"')");
+	String name	= request.getParameter("name");	
+	if(account != null){
+		a.executeSQLInsert("INSERT INTO `boss-account`( `account`, `password`, `email`, `name`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"')");
 	}
 	a.closeConnection();
 }else if(check.equals("true")){
-	String data[][]=a.getData("SELECT  `account` FROM `teacher-account`");
+	String data[][]=a.getData("SELECT  `account` FROM `boss-account`");
 	a.closeConnection();
 	if(data != null){
 		for(int i=0;i<data.length;i++){
@@ -38,9 +37,9 @@ if(register.equals("true")){
 		result = true;
 		response.getWriter().print(result); 
 	}
-}else if(tLogIn.equals("true")){
+}else if(bLogIn.equals("true")){
 	String password	= request.getParameter("password");
-	String data[][]=a.getData("SELECT  `account`,`password`,`name` FROM `teacher-account`");
+	String data[][]=a.getData("SELECT  `account`,`password`,`name` FROM `boss-account`");
 	a.closeConnection();
 	boolean alive = false;
 	if(data != null){

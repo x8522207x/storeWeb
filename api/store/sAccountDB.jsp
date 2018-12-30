@@ -14,13 +14,13 @@ if(register.equals("true")){
 	String password	= request.getParameter("password");
 	String email	= request.getParameter("email");
 	String name	= request.getParameter("name");
-	String Dept	= request.getParameter("Dept");		
-	if(account != null && Dept!= null){
-		a.executeSQLInsert("INSERT INTO `student-account`( `account`, `password`, `email`, `name`, `Dept`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+Dept+"')");
+	String workTime	= request.getParameter("workTime");		
+	if(account != null ){
+		a.executeSQLInsert("INSERT INTO `staff-account`( `account`, `password`, `email`, `name`, `workTime`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+workTime+"')");
 	}
 	a.closeConnection();
 }else if(check.equals("true")){
-	String data[][]=a.getData("SELECT  `account` FROM `student-account`");
+	String data[][]=a.getData("SELECT `account` FROM `staff-account`");
 	a.closeConnection();
 	if(data != null){
 		for(int i=0;i<data.length;i++){
@@ -40,7 +40,7 @@ if(register.equals("true")){
 	}
 }else if(sLogIn.equals("true")){
 	String password	= request.getParameter("password");
-	String data[][]=a.getData("SELECT  `account`,`password`,`name` FROM `student-account`");
+	String data[][]=a.getData("SELECT  `account`,`password`,`name` FROM `staff-account`");
 	a.closeConnection();
 	boolean alive = false;
 	if(data != null){

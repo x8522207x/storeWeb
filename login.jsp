@@ -93,11 +93,11 @@
 		var redirect = false;
 		var user = "";
 		$.ajax({
-			url: 'api/store/tAccountDB.jsp',
+			url: 'api/store/bAccountDB.jsp',
 			type: 'POST',
 			async: false,
 			data: {
-				"bLogin"  : "true",
+				"bLogIn"  : "true",
 				"account"	: $("#boss-account").val(),
 				"password"	: $("#boss-password").val(),
 			},
@@ -112,6 +112,7 @@
 			}
 		});
 		if(redirect === true){
+			
 			setCookie('identity','boss', 30);
 			setCookie('user',user, 30);
 			$(location).attr('href','http://localhost:8080/store/lobby.jsp')

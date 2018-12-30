@@ -105,9 +105,9 @@
 	
 	function register(){
 		console.log(workTime.value);
-		if( nameInput.value.length === 0 || passwordInput.value.length === 0 || passwordInput2.value.length === 0 || emailInput.value.length === 0 || departInput.value.length === 0 || accountInput.value.length === 0){
+		if( nameInput.value.length === 0 || passwordInput.value.length === 0 || passwordInput2.value.length === 0 || emailInput.value.length === 0 || accountInput.value.length === 0){
 			alert("還有欄位未填");
-		}else if( nameInput.value.length > 0 && passwordInput.value.length > 7 && passwordInput2.value.length > 7 && emailInput.value.length > 0 && departInput.value.length > 0 && accountInput.value.length>6){
+		}else if( nameInput.value.length > 0 && passwordInput.value.length > 7 && passwordInput2.value.length > 7 && emailInput.value.length > 0 && accountInput.value.length>6){
 			var register = "true";
 			$.ajax({
 				url: 'api/store/sAccountDB.jsp',
