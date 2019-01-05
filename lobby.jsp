@@ -115,10 +115,10 @@
 			var firstDay = dayStart(my_month, my_year); 
 			var myclass;
 			for(var i=1; i<firstDay; i++){ 
-				str += "<li></li>"; 
+				str += "<li id=></li>"; 
 			}
 			for(var i=1; i<=totalDay; i++){
-				str += "<li>"+i+"</li>";
+				str += "<li id="+my_year+"_"+(my_month+1)+"_"+i+">"+i+"</li>";
 			}
 			holder.innerHTML = str; 
 			ctitle.innerHTML = month_name[my_month]; 
