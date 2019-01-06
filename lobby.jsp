@@ -280,5 +280,9 @@
 	.green, .green-small{
 		color:#6ac13c; /*绿色*/
 	}
+	body {
+	   background-image: url("image/lobby.jpg");
+	   background-size: 100% 100%;
+	}
 	</style>
 </html>
