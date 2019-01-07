@@ -111,8 +111,7 @@
 				alert("查無此帳號");
 			}
 		});
-		if(redirect === true){
-			
+		if(redirect === true){	
 			setCookie('identity','boss', 30);
 			setCookie('user',user, 30);
 			$(location).attr('href','http://localhost:8080/store/lobby.jsp')

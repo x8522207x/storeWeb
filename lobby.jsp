@@ -2,6 +2,7 @@
 <%@ page import ="ascdc.sinica.dhtext.db.DBText"%>
 <%@ page import ="java.text.*"%>
 <%@ page import ="java.util.*"%>
+<%@ page import ="java.time.YearMonth"%>
 <html lang="zh-TW">
 	<head>
 		<meta charset="utf-8">
@@ -113,6 +114,41 @@
 							</h3>
 						</div>
 					</div>
+					<div>
+						<h4>選擇下個月可能可以上班的日期</h4>
+						<%
+							Calendar now = Calendar.getInstance();
+							YearMonth yearMonthObject = YearMonth.of(Calendar.DAY_OF_YEAR, Calendar.DAY_OF_MONTH);
+							int daysInMonth = yearMonthObject.lengthOfMonth();
+							for(int i=1; i<=daysInMonth; i++){
+						%>
+						<input type="checkbox" id="arrange<%=i%>"><%=i%></input>
+						<%
+								if(i%5 == 0){
+						%>
+						<br>
+						<%
+								}
+							}
+						%>
+						<br>
+						<input type="checkbox" id="checkArrange">全選</input>
+						<br>
+						<input type="button" id="cancelArrange" value="取消"></input>
+						<input type="button" value="送出" onclick="arrangeSubmit()"></input>
+					</div>
+					<div>
+						<h4>已選的時間</h4>
+						<%
+							DBText a = new DBText();
+							ArrayList<String> keyList = new ArrayList<String>();
+							a.connection();
+							String b[][] =a.getData("SELECT `year`,`month`,`day` FROM `staff-arrange` WHERE `user` ="+session.getAttribute( "user" ));
+							if(b != null){
+								System.out.println(b);
+							}
+						%>
+					</div>
 					<canvas class="my-4 chartjs-render-monitor" id="myChart" width="866" height="365" style="display: block; width: 866px; height: 365px;"></canvas>
 				</main>
 			</div>
@@ -192,6 +228,32 @@
 			}
 			refreshDate();
 		}
+		$("#checkArrange").click(function(){
+			if($("#checkArrange").prop("checked")){//如果全選按鈕有被選擇的話（被選擇是true）
+				$("input[id*='arrange']").each(function(){
+					$(this).prop("checked",true);//把所有的核取方框的property都變成勾選
+				})
+			}else{
+				$("input[id*='arrange']").each(function(){
+					$(this).prop("checked",false);//把所有的核方框的property都取消勾選
+				})
+			}
+		})
+		$("#cancelArrange").click(function(){
+			$("input[id*='arrange']").each(function(){
+				$(this).prop("checked",false);//把所有的核取方框的property都變成勾選
+			})
+			$("#checkArrange").prop("checked",false);
+		})
+		function arrangeSubmit(){
+			var day = [];
+			for(var i=0 ; i<$("input[id*='arrange']").length; i++){
+				if($("input[id*='arrange']")[i].checked === true){
+					day.push(i+1);
+				}
+			}
+			console.log(day);
+		}
 		$(function() {
 			if(getCookie('switchCheck') === 'true'){
 				$("#calendarSet").attr('hidden',false);
@@ -221,7 +283,7 @@
 			
 			
 			
-			if((my_day < (daysMonth(my_month, my_year)-6) || my_day > (daysMonth(my_month, my_year)-1) )&& getCookie('identity') === "staff"){
+			if((my_day < (daysMonth(my_month, my_year)-25) || my_day > (daysMonth(my_month, my_year)-1) )&& getCookie('identity') === "staff"){
 				$("#calendarSet").attr('hidden',true);
 				$("#alertTime").text("請注意本月排班時間是："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
 			}else if((daysMonth(my_month, my_year)-6) <= my_day <= (daysMonth(my_month, my_year)-1) && getCookie('identity') === "staff"){

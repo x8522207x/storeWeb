@@ -49,6 +49,7 @@ if(register.equals("true")){
 				if(password.equals(data[i][1])){
 					String userInfo = "true;"+data[i][2];
 					response.getWriter().print(userInfo);
+					session.setAttribute( "user", data[i][2] );
 					alive = true;
 					break;
 				}else{
