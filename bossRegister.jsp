@@ -17,7 +17,7 @@
 <body>
   <div class="container" id="app">
     <form class="register-form" role="form" method="POST" id="form1">
-      <div class="rg-back-login"><a href="login.jsp">回登入頁</a></div>
+      <div class="rg-back-login"><a href="login.jsp">回登入頁</a></div> 
 	  <input type="hidden" name="op" value="add">
 	  <h2 class="form-signin-heading text-center">註冊</h2>
 	  <label for="inputName">姓名</label> 
