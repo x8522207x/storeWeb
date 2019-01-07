@@ -138,16 +138,29 @@
 						<input type="button" value="送出" onclick="arrangeSubmit()"></input>
 					</div>
 					<div>
-						<h4>已選的時間</h4>
+						<h4>已選的日期</h4>
 						<%
 							DBText a = new DBText();
-							ArrayList<String> keyList = new ArrayList<String>();
 							a.connection();
-							String b[][] =a.getData("SELECT `year`,`month`,`day` FROM `staff-arrange` WHERE `user` ="+session.getAttribute( "user" ));
+							String b[][] =a.getData("SELECT `day` FROM `staff-arrange` WHERE `user` ='"+session.getAttribute( "user" )+"' ORDER BY `staff-arrange`.`day` ASC");
 							if(b != null){
-								System.out.println(b);
+								for(int i = 0; i < b.length; i++){
+						%>
+						<input type="checkbox" id="edit<%=b[i][0]%>"><%=b[i][0]%></input>
+						<%
+									if(i%5 == 4){
+						%>
+						<br>
+						<%
+									}
+								}
 							}
 						%>
+						<br>
+						<input type="checkbox" id="editArrange">全選</input>
+						<br>
+						<input type="button" id="cancelEdit" value="取消"></input>
+						<input type="button" value="刪除" onclick="arrangeDelete()"></input>
 					</div>
 					<canvas class="my-4 chartjs-render-monitor" id="myChart" width="866" height="365" style="display: block; width: 866px; height: 365px;"></canvas>
 				</main>
@@ -239,11 +252,28 @@
 				})
 			}
 		})
+		$("#editArrange").click(function(){
+			if($("#editArrange").prop("checked")){//如果全選按鈕有被選擇的話（被選擇是true）
+				$("input[id*='edit']").each(function(){
+					$(this).prop("checked",true);//把所有的核取方框的property都變成勾選
+				})
+			}else{
+				$("input[id*='edit']").each(function(){
+					$(this).prop("checked",false);//把所有的核方框的property都取消勾選
+				})
+			}
+		})
 		$("#cancelArrange").click(function(){
 			$("input[id*='arrange']").each(function(){
 				$(this).prop("checked",false);//把所有的核取方框的property都變成勾選
 			})
 			$("#checkArrange").prop("checked",false);
+		})
+		$("#cancelEdit").click(function(){
+			$("input[id*='edit']").each(function(){
+				$(this).prop("checked",false);//把所有的核取方框的property都變成勾選
+			})
+			$("#editArrange").prop("checked",false);
 		})
 		function arrangeSubmit(){
 			var day = [];
@@ -252,7 +282,36 @@
 					day.push(i+1);
 				}
 			}
-			console.log(day);
+			$.ajax({
+				url: 'api/store/sWork.jsp',
+				type: 'POST',
+				async: false,
+				data: {
+					"arrange"		: "true",
+					"user"  : getCookie('user'),
+					"day"	: day,
+					"month"	: my_month,
+					"year"	: my_year,
+				},
+			});
+		}
+		function arrangeDelete(){
+			var day = [];
+			for(var i=0 ; i<$("input[id*='edit']").length; i++){
+				if($("input[id*='edit']")[i].checked === true){
+					day.push($("input[id*='edit']")[i].nextSibling.data.trim());
+				}
+			}
+			$.ajax({
+				url: 'api/store/sWork.jsp',
+				type: 'POST',
+				async: false,
+				data: {
+					"edit"		: "true",
+					"user"  : getCookie('user'),
+					"day"	: day,
+				},
+			});
 		}
 		$(function() {
 			if(getCookie('switchCheck') === 'true'){
