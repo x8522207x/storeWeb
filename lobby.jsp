@@ -114,7 +114,7 @@
 							</h3>
 						</div>
 					</div>
-					<div>
+					<div id="div3" hidden>
 						<h4>選擇下個月可能可以上班的日期</h4>
 						<%
 							Calendar now = Calendar.getInstance();
@@ -137,7 +137,7 @@
 						<input type="button" id="cancelArrange" value="取消"></input>
 						<input type="button" value="送出" onclick="arrangeSubmit()"></input>
 					</div>
-					<div>
+					<div id="div4" hidden>
 						<h4>已選的日期</h4>
 						<%
 							DBText a = new DBText();
@@ -161,6 +161,45 @@
 						<br>
 						<input type="button" id="cancelEdit" value="取消"></input>
 						<input type="button" value="刪除" onclick="arrangeDelete()"></input>
+					</div>
+					<div id="div5" class="row" hidden>
+						<h4>安排上班人員</h4>
+						<div class="col">
+							<h5>12:00 a.m. ~8:00 a.m.(1人/天)</h5>
+							<%
+								for(int i=1; i<=daysInMonth; i++){
+							%>
+							<h6><%=i%>(已選人員：<span>無</span>）</h6>
+							<h6>建議的人員：</h6>
+							<h6>不建議的人員：</h6>
+							<%
+								}
+							%>
+						</div>
+						<div class="col">
+							<h5>12:00 a.m. ~8:00 a.m.(2人/天)</h5>
+							<%
+								for(int i=1; i<=daysInMonth; i++){
+							%>
+							<h6><%=i%>(已選人員：<span>無</span>）</h6>
+							<h6>建議的人員：</h6>
+							<h6>不建議的人員：</h6>
+							<%
+								}
+							%>
+						</div>
+						<div class="col">
+							<h5>4:00 p.m. ~12:00 a.m.(2人/天)</h5>
+							<%
+								for(int i=1; i<=daysInMonth; i++){
+							%>
+							<h6><%=i%>(已選人員：<span>無</span>）</h6>
+							<h6>建議的人員：</h6>
+							<h6>不建議的人員：</h6>
+							<%
+								}
+							%>
+						</div>
 					</div>
 					<canvas class="my-4 chartjs-render-monitor" id="myChart" width="866" height="365" style="display: block; width: 866px; height: 365px;"></canvas>
 				</main>
@@ -282,6 +321,14 @@
 					day.push(i+1);
 				}
 			}
+			for(var i=0; i<$("input[id*='edit']").length; i++){
+				for(var j=0; j<day.length;j++){
+					if(day[j] == $("input[id*='edit']")[i].nextSibling.data.trim()){
+						day.splice(j, 1);
+						break;
+					}
+				}
+			}
 			$.ajax({
 				url: 'api/store/sWork.jsp',
 				type: 'POST',
@@ -293,6 +340,8 @@
 					"month"	: my_month,
 					"year"	: my_year,
 				},
+			}).done(function(){
+				window.location = "http://localhost:8080/store/lobby.jsp";
 			});
 		}
 		function arrangeDelete(){
@@ -311,30 +360,29 @@
 					"user"  : getCookie('user'),
 					"day"	: day,
 				},
+			}).done(function(){
+				window.location = "http://localhost:8080/store/lobby.jsp";
 			});
 		}
 		$(function() {
-			if(getCookie('switchCheck') === 'true'){
-				$("#calendarSet").attr('hidden',false);
-				$('#switch').prop('checked', true).change();
-			}else if(getCookie('switchCheck') === 'false'){
-				$("#calendarSet").attr('hidden',true);
-				$('#switch').prop('checked', false).change();
-			}
-			$('#switch').change(function() {
-				setCookie('switchCheck',$(this)[0].checked, 30);
-			})
 			if(getCookie('identity') === "boss"){
 				$("#calendar").attr('hidden',true);
 				$("#calendarAll").attr('hidden',false);
 				$("#calendarSet").attr('hidden',false);
-				$('#switch').attr('hidden',false);
+				$("#div3").attr('hidden', true);
+				$("#div4").attr('hidden', true);
+				$("#div5").attr('hidden', false);
+				$("#div6").attr('hidden', false);
+				$("#limitTime").attr('hidden', true);
 				calendarAll();
 			}else{
 				$("#calendar").attr('hidden',false); 
 				$("#calendarAll").attr('hidden',true);
 				$("#calendarSet").attr('hidden',true);
-				$('#switch').attr('hidden',true);
+				$("#div3").attr('hidden', false);
+				$("#div4").attr('hidden', false);
+				$("#div5").attr('hidden', true);
+				$("#div6").attr('hidden', true);
 				calendar();
 			}
 			$("#limitTime").text("開放時間："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
