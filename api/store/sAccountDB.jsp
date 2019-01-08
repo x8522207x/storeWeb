@@ -17,6 +17,9 @@ if(register.equals("true")){
 	String workTime	= request.getParameter("workTime");		
 	if(account != null ){
 		a.executeSQLInsert("INSERT INTO `staff-account`( `account`, `password`, `email`, `name`, `workTime`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+workTime+"')");
+		if(workTime.equals("noon")||workTime.equals("night")){
+			a.executeSQLInsert("INSERT INTO `staff-account`( `account`, `password`, `email`, `name`, `workTime`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+workTime+"2')");
+		}
 	}
 	a.closeConnection();
 }else if(check.equals("true")){
