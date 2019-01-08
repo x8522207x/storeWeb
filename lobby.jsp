@@ -167,11 +167,45 @@
 						<div class="col">
 							<h5>12:00 a.m. ~8:00 a.m.(1人/天)</h5>
 							<%
+								ArrayList<String> worker = new ArrayList<String>();
+								ArrayList<String> workerChoose = new ArrayList<String>();
+								String morningWorker[][] =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'morning'");
+								if(morningWorker != null){
+									for(int i=0; i<morningWorker.length; i++){
+										worker.add(morningWorker[i][0]);
+									}
+								}
 								for(int i=1; i<=daysInMonth; i++){
 							%>
 							<h6><%=i%>(已選人員：<span>無</span>）</h6>
-							<h6>建議的人員：</h6>
-							<h6>不建議的人員：</h6>
+							<%
+									String c[][] =a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"'");
+									String advice = "";
+									String unadvice = "";
+									if(c != null){
+										for(int i=0; i<c.length; i++){
+											workerChoose.add(c[i][0]);
+										}
+									}
+									if(workerChoose.length ==0){
+										advice = "無";
+									}else{
+										for(int j=0; j< workerChoose.length; j++){
+											advice += workerChoose.get(j)+"、";
+										}
+										for(int j=0; j<worker.length; j++){
+											for(int k=0;k< workerChoose.length; k++){
+												if(worker.get(j).equals(workerChoose.get(k))){
+													break;
+												}
+											}
+										}
+									}
+							%>
+							<h6>
+							建議的人員：<%=advice%>
+							</h6>
+							<h6>不建議的人員：<%=advice%></h6>
 							<%
 								}
 							%>
@@ -179,6 +213,13 @@
 						<div class="col">
 							<h5>12:00 a.m. ~8:00 a.m.(2人/天)</h5>
 							<%
+								worker.clear();
+								String noonWorker[][] =a.getData("SELECT `user` FROM `staff-account` WHERE `workTime` = 'noon'");
+								if(noonWorker != null){
+									for(int i=0; i<noonWorker.length; i++){
+										worker.add(noonWorker[i][0]);
+									}
+								}
 								for(int i=1; i<=daysInMonth; i++){
 							%>
 							<h6><%=i%>(已選人員：<span>無</span>）</h6>
@@ -191,6 +232,13 @@
 						<div class="col">
 							<h5>4:00 p.m. ~12:00 a.m.(2人/天)</h5>
 							<%
+								worker.clear();
+								String nightWorker[][] =a.getData("SELECT `user` FROM `staff-account` WHERE `workTime` = 'night'");
+								if(nightWorker != null){
+									for(int i=0; i<nightWorker.length; i++){
+										worker.add(nightWorker[i][0]);
+									}
+								}
 								for(int i=1; i<=daysInMonth; i++){
 							%>
 							<h6><%=i%>(已選人員：<span>無</span>）</h6>
@@ -202,6 +250,9 @@
 						</div>
 					</div>
 					<canvas class="my-4 chartjs-render-monitor" id="myChart" width="866" height="365" style="display: block; width: 866px; height: 365px;"></canvas>
+					<%
+						a.closeConnection();
+					%>
 				</main>
 			</div>
 		</div>
