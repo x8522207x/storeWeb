@@ -5,25 +5,23 @@
 <%@ page import ="java.util.*"%>
 <%@ page import ="java.time.YearMonth"%>
 <html lang="zh-TW">
-	<head>
-		<meta charset="utf-8">
-		<title>超商店員排班系統</title>
-		<link rel="stylesheet" href="css/fontawesome/css/font-awesome.min.css">
-		<link rel="stylesheet" href="assets/css/style.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-		<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
-		<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" ></script>
-		<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-	</head>
-<%
-							Calendar now = Calendar.getInstance();
-							YearMonth yearMonthObject = YearMonth.of(Calendar.DAY_OF_YEAR, Calendar.DAY_OF_MONTH);
-							int daysInMonth = yearMonthObject.lengthOfMonth();
-							DBText a = new DBText();
-							JSONArray jar = new JSONArray();
-%>
+	<jsp:include page='assets/head.jsp'></jsp:include>
+	<script>
+		var user = getCookie('user');
+		var identity = getCookie('identity');
+		if(user == "" & identity == ""){
+			var result = alert("請登入");
+			window.location = "http://localhost:8080/store/login.jsp";
+		}
+	
+	</script>
+	<%
+								Calendar now = Calendar.getInstance();
+								YearMonth yearMonthObject = YearMonth.of(Calendar.DAY_OF_YEAR, Calendar.DAY_OF_MONTH);
+								int daysInMonth = yearMonthObject.lengthOfMonth();
+								DBText a = new DBText();
+								JSONArray jar = new JSONArray();
+	%>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
 			<a class="navbar-brand" href="lobby.jsp">超商店員排班系統</a>
@@ -32,7 +30,7 @@
 			</button>
 			<h4 id="alertTime" style="text-align: center;color: red;"></h4>
 			<h4 id="user" style="position:absolute;right:80px;"></h4>
-			<a class="btn btn-outline-primary" href="login.jsp"  style="position:absolute;right:10px;">登出</a>
+			<a class="btn btn-outline-primary" id="logOut" style="position:absolute;right:10px;">登出</a>
 		</nav>
 		<div class="container-fluid">
 			<div class="row">
@@ -65,12 +63,12 @@
 						<div class="title">
 							<h1 class="green" id="calendar-title">Month</h1>
 							<h2 class="green-small" id="calendar-year">Year</h2>
-							<a class="prev" id="prev">
+							<!--<a class="prev" id="prev">
 								<img src="image/left.png" height="24" width="24" >
 							</a>
 							<a class="next" id="next">
 								<img src="image/right.png" height="24" width="24" >
-							</a>
+							</a>-->
 						</div>
 						<div class="body">
 							<div class="lightgrey body-list">
@@ -511,142 +509,214 @@
 			</div>
 		</div>
 	</body>
-	</html>
-	<script type="text/javascript">
-		var month_olympic = [31,29,31,30,31,30,31,31,30,31,30,31];
-		var month_normal = [31,28,31,30,31,30,31,31,30,31,30,31];
-		var month_name = ["January","Febrary","March","April","May","June","July","Auguest","September","October","November","December"];
-		var holder = document.getElementById("days");
-		/*var prev = document.getElementById("prev");
-		var next = document.getElementById("next");*/
-		var ctitle = document.getElementById("calendar-title");
-		var cyear = document.getElementById("calendar-year");
-		var my_date = new Date();
-		var my_year = my_date.getFullYear();
-		var my_month = my_date.getMonth();
-		var my_day = my_date.getDate();
-		function dayStart(month, year) {
-			var tmpDate = new Date(year, month, 1);
-			return (tmpDate.getDay());
+</html>
+<script type="text/javascript">
+	var month_olympic = [31,29,31,30,31,30,31,31,30,31,30,31];
+	var month_normal = [31,28,31,30,31,30,31,31,30,31,30,31];
+	var month_name = ["January","Febrary","March","April","May","June","July","Auguest","September","October","November","December"];
+	var holder = document.getElementById("days");
+	/*var prev = document.getElementById("prev");
+	var next = document.getElementById("next");*/
+	var ctitle = document.getElementById("calendar-title");
+	var cyear = document.getElementById("calendar-year");
+	var my_date = new Date();
+	var my_year = my_date.getFullYear();
+	var my_month = my_date.getMonth();
+	var my_day = my_date.getDate();
+	function dayStart(month, year) {
+		var tmpDate = new Date(year, month, 1);
+		return (tmpDate.getDay());
+	}
+	function daysMonth(month, year) {
+		var tmp = year % 4;
+		if (tmp == 0) {
+			return (month_olympic[month]);
+		} else {
+			return (month_normal[month]);
 		}
-		function daysMonth(month, year) {
-			var tmp = year % 4;
-			if (tmp == 0) {
-				return (month_olympic[month]);
-			} else {
-				return (month_normal[month]);
-			}
+	}
+	function refreshDate(){
+		var str = "";
+		var totalDay = daysMonth(my_month, my_year); 
+		var firstDay = dayStart(my_month, my_year); 
+		var myclass;
+		for(var i=1; i<firstDay; i++){ 
+			str += "<li id=></li>"; 
 		}
-		function refreshDate(){
-			var str = "";
-			var totalDay = daysMonth(my_month, my_year); 
-			var firstDay = dayStart(my_month, my_year); 
-			var myclass;
-			for(var i=1; i<firstDay; i++){ 
-				str += "<li id=></li>"; 
-			}
-			for(var i=1; i<=totalDay; i++){
-				str += "<li id="+my_year+"_"+(my_month+1)+"_"+i+">"+i+"</li>";
-			}
-			holder.innerHTML = str; 
-			ctitle.innerHTML = month_name[my_month]; 
-			cyear.innerHTML = my_year; 
-			$.ajax({
-				url: 'api/store/sWork.jsp',
-				type: 'POST',
-				async: false,
-				data: {
-					"getWorkTime"		: "true",
-					"user"  : getCookie('user'),
-					"month"	: my_month,
-					"year"	: my_year,
-				},
-			}).done(function (data){
-				for(var i=0;i<data.split("、").length-1;i++){
-					$("#"+my_year+"_"+(my_month+1)+"_"+data.split("、")[i])[0].className += "green-small";
-				}
-			});
+		for(var i=1; i<=totalDay; i++){
+			str += "<li id="+my_year+"_"+(my_month+1)+"_"+i+">"+i+"</li>";
 		}
-		function calendar(){
-			$("#main1").attr('hidden',false);
-			$("#main2").attr('hidden',true);
-			$("#main3").attr('hidden',true);
-		}
-		function calendarAll(){
-			$("#main1").attr('hidden',true);
-			$("#main2").attr('hidden',false);
-			$("#main3").attr('hidden',true);
-		}
-		function calendarSet(){
-			$("#main1").attr('hidden',true);
-			$("#main2").attr('hidden',true);
-			$("#main3").attr('hidden',false);
-		}
-		/*prev.onclick = function(e){
-			e.preventDefault();
-			my_month--;
-			if(my_month<0){
-				my_year--;
-				my_month = 11;
+		holder.innerHTML = str; 
+		ctitle.innerHTML = month_name[my_month]; 
+		cyear.innerHTML = my_year; 
+		$.ajax({
+			url: 'api/store/sWork.jsp',
+			type: 'POST',
+			async: false,
+			data: {
+				"getWorkTime"		: "true",
+				"user"  : getCookie('user'),
+				"month"	: my_month,
+				"year"	: my_year,
+			},
+		}).done(function (data){
+			for(var i=0;i<data.split("、").length-1;i++){
+				$("#"+my_year+"_"+(my_month+1)+"_"+data.split("、")[i])[0].className += "green-small";
 			}
-			refreshDate();
+		});
+	}
+	function calendar(){
+		$("#main1").attr('hidden',false);
+		$("#main2").attr('hidden',true);
+		$("#main3").attr('hidden',true);
+	}
+	function calendarAll(){
+		$("#main1").attr('hidden',true);
+		$("#main2").attr('hidden',false);
+		$("#main3").attr('hidden',true);
+	}
+	function calendarSet(){
+		$("#main1").attr('hidden',true);
+		$("#main2").attr('hidden',true);
+		$("#main3").attr('hidden',false);
+	}
+	/*prev.onclick = function(e){
+		e.preventDefault();
+		my_month--;
+		if(my_month<0){
+			my_year--;
+			my_month = 11;
 		}
-		next.onclick = function(e){
-			e.preventDefault();
-			my_month++;
-			if(my_month>11){
-				my_year++;
-				my_month = 0;
-			}
-			refreshDate();
-		}*/
-		$("#checkArrange").click(function(){
-			if($("#checkArrange").prop("checked")){//如果全選按鈕有被選擇的話（被選擇是true）
-				$("input[id*='arrange']").each(function(){
-					$(this).prop("checked",true);//把所有的核取方框的property都變成勾選
-				})
-			}else{
-				$("input[id*='arrange']").each(function(){
-					$(this).prop("checked",false);//把所有的核方框的property都取消勾選
-				})
-			}
-		})
-		$("#editArrange").click(function(){
-			if($("#editArrange").prop("checked")){//如果全選按鈕有被選擇的話（被選擇是true）
-				$("input[id*='edit']").each(function(){
-					$(this).prop("checked",true);//把所有的核取方框的property都變成勾選
-				})
-			}else{
-				$("input[id*='edit']").each(function(){
-					$(this).prop("checked",false);//把所有的核方框的property都取消勾選
-				})
-			}
-		})
-		$("#cancelArrange").click(function(){
+		refreshDate();
+	}
+	next.onclick = function(e){
+		e.preventDefault();
+		my_month++;
+		if(my_month>11){
+			my_year++;
+			my_month = 0;
+		}
+		refreshDate();
+	}*/
+	$("#checkArrange").click(function(){
+		if($("#checkArrange").prop("checked")){//如果全選按鈕有被選擇的話（被選擇是true）
 			$("input[id*='arrange']").each(function(){
-				$(this).prop("checked",false);//把所有的核取方框的property都變成勾選
+				$(this).prop("checked",true);//把所有的核取方框的property都變成勾選
 			})
-			$("#checkArrange").prop("checked",false);
-		})
-		$("#cancelEdit").click(function(){
+		}else{
+			$("input[id*='arrange']").each(function(){
+				$(this).prop("checked",false);//把所有的核方框的property都取消勾選
+			})
+		}
+	})
+	
+	$("#editArrange").click(function(){
+		if($("#editArrange").prop("checked")){//如果全選按鈕有被選擇的話（被選擇是true）
 			$("input[id*='edit']").each(function(){
-				$(this).prop("checked",false);//把所有的核取方框的property都變成勾選
+				$(this).prop("checked",true);//把所有的核取方框的property都變成勾選
 			})
-			$("#editArrange").prop("checked",false);
+		}else{
+			$("input[id*='edit']").each(function(){
+				$(this).prop("checked",false);//把所有的核方框的property都取消勾選
+			})
+		}
+	})
+	
+	$("#cancelArrange").click(function(){
+		$("input[id*='arrange']").each(function(){
+			$(this).prop("checked",false);//把所有的核取方框的property都變成勾選
 		})
-		function arrangeSubmit(){
-			var day = [];
-			for(var i=0 ; i<$("input[id*='arrange']").length; i++){
-				if($("input[id*='arrange']")[i].checked === true){
-					day.push(i+1);
+		$("#checkArrange").prop("checked",false);
+	})
+	
+	$("#cancelEdit").click(function(){
+		$("input[id*='edit']").each(function(){
+			$(this).prop("checked",false);//把所有的核取方框的property都變成勾選
+		})
+		$("#editArrange").prop("checked",false);
+	})
+	
+	$("#logOut").click(function(){
+		deleteCookie('identity');
+		deleteCookie('user');
+		$(location).attr('href','http://localhost:8080/store/login.jsp')
+	})
+	
+	
+	function arrangeSubmit(){
+		var day = [];
+		for(var i=0 ; i<$("input[id*='arrange']").length; i++){
+			if($("input[id*='arrange']")[i].checked === true){
+				day.push(i+1);
+			}
+		}
+		for(var i=0; i<$("input[id*='edit']").length; i++){
+			for(var j=0; j<day.length;j++){
+				if(day[j] == $("input[id*='edit']")[i].nextSibling.data.trim()){
+					day.splice(j, 1);
+					break;
 				}
 			}
-			for(var i=0; i<$("input[id*='edit']").length; i++){
-				for(var j=0; j<day.length;j++){
-					if(day[j] == $("input[id*='edit']")[i].nextSibling.data.trim()){
-						day.splice(j, 1);
-						break;
-					}
+		}
+		$.ajax({
+			url: 'api/store/sWork.jsp',
+			type: 'POST',
+			async: false,
+			data: {
+				"arrange"		: "true",
+				"user"  : getCookie('user'),
+				"day"	: day,
+				"month"	: my_month,
+				"year"	: my_year,
+			},
+		}).done(function(){
+			window.location = "http://localhost:8080/store/lobby.jsp";
+		});
+	}
+	
+	function arrangeDelete(){
+		var day = [];
+		for(var i=0 ; i<$("input[id*='edit']").length; i++){
+			if($("input[id*='edit']")[i].checked === true){
+				day.push($("input[id*='edit']")[i].nextSibling.data.trim());
+			}
+		}
+		$.ajax({
+			url: 'api/store/sWork.jsp',
+			type: 'POST',
+			async: false,
+			data: {
+				"edit"		: "true",
+				"user"  : getCookie('user'),
+				"day"	: day,
+			},
+		}).done(function(){
+			window.location = "http://localhost:8080/store/lobby.jsp";
+		});
+	}
+	
+	function bossArrange(){
+		var noonAir = "";
+		var nightAir = "";
+		for(var i=0; i<$("select[id*='workTimeNoon']").length; i++){
+			if(($("select[id*='workTimeNoon']")[i].value === "" && $("select[id*='twoWorkTimeNoon']")[i].value !== "") || ($("select[id*='workTimeNoon']")[i].value !== "" && $("select[id*='twoWorkTimeNoon']")[i].value === "") || ($("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value && $("select[id*='twoWorkTimeNoon']")[i].value !== "")){
+				noonAir += (i+1)+"、";
+			}
+			if(($("select[id*='workTimeNight']")[i].value === "" && $("select[id*='twoWorkTimeNight']")[i].value !== "") || ($("select[id*='workTimeNight']")[i].value !== "" && $("select[id*='twoWorkTimeNight']")[i].value === "") || ($("select[id*='workTimeNight']")[i].value === $("select[id*='twoWorkTimeNight']")[i].value && $("select[id*='twoWorkTimeNight']")[i].value !== "")){
+				nightAir += (i+1)+"、";
+			}
+		}
+		if(noonAir.length >0 || nightAir.length >0){
+			noonAir = noonAir.substring(0, noonAir.length-1);
+			nightAir = nightAir.substring(0, nightAir.length-1);
+			alert("午班："+noonAir+" 以及 晚班："+nightAir+" 有少派人 或者 重複指派人");
+		}else{
+			var user = [];
+			for(var i=0; i<$("select[id*='workTimeMorning']").length; i++){
+				if($("select[id*='workTimeMorning']")[i].value === ""){
+					user.push("無");
+				}else{
+					user.push($("select[id*='workTimeMorning']")[i].value);
 				}
 			}
 			$.ajax({
@@ -654,233 +724,156 @@
 				type: 'POST',
 				async: false,
 				data: {
-					"arrange"		: "true",
-					"user"  : getCookie('user'),
-					"day"	: day,
-					"month"	: my_month,
-					"year"	: my_year,
+					"decide"		: "true",
+					"user"  : user,
+					"year"	:my_year,
+					"month"	:my_month,
+					"orderWork"	: "morning",
 				},
-			}).done(function(){
-				window.location = "http://localhost:8080/store/lobby.jsp";
 			});
-		}
-		function arrangeDelete(){
-			var day = [];
-			for(var i=0 ; i<$("input[id*='edit']").length; i++){
-				if($("input[id*='edit']")[i].checked === true){
-					day.push($("input[id*='edit']")[i].nextSibling.data.trim());
-				}
-			}
-			$.ajax({
-				url: 'api/store/sWork.jsp',
-				type: 'POST',
-				async: false,
-				data: {
-					"edit"		: "true",
-					"user"  : getCookie('user'),
-					"day"	: day,
-				},
-			}).done(function(){
-				window.location = "http://localhost:8080/store/lobby.jsp";
-			});
-		}
-		function bossArrange(){
-			var noonAir = "";
-			var nightAir = "";
+			user = [];
 			for(var i=0; i<$("select[id*='workTimeNoon']").length; i++){
-				if(($("select[id*='workTimeNoon']")[i].value === "" && $("select[id*='twoWorkTimeNoon']")[i].value !== "") || ($("select[id*='workTimeNoon']")[i].value !== "" && $("select[id*='twoWorkTimeNoon']")[i].value === "") || ($("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value && $("select[id*='twoWorkTimeNoon']")[i].value !== "")){
-					noonAir += (i+1)+"、";
-				}
-				if(($("select[id*='workTimeNight']")[i].value === "" && $("select[id*='twoWorkTimeNight']")[i].value !== "") || ($("select[id*='workTimeNight']")[i].value !== "" && $("select[id*='twoWorkTimeNight']")[i].value === "") || ($("select[id*='workTimeNight']")[i].value === $("select[id*='twoWorkTimeNight']")[i].value && $("select[id*='twoWorkTimeNight']")[i].value !== "")){
-					nightAir += (i+1)+"、";
+				if($("select[id*='workTimeNoon']")[i].value === ""){
+					user.push("無");
+				}else{
+					user.push($("select[id*='workTimeNoon']")[i].value);
 				}
 			}
-			if(noonAir.length >0 || nightAir.length >0){
-				noonAir = noonAir.substring(0, noonAir.length-1);
-				nightAir = nightAir.substring(0, nightAir.length-1);
-				alert("午班："+noonAir+" 以及 晚班："+nightAir+" 有少派人 或者 重複指派人");
-			}else{
-				var user = [];
-				for(var i=0; i<$("select[id*='workTimeMorning']").length; i++){
-					if($("select[id*='workTimeMorning']")[i].value === ""){
-						user.push("無");
-					}else{
-						user.push($("select[id*='workTimeMorning']")[i].value);
-					}
+			$.ajax({
+				url: 'api/store/sWork.jsp',
+				type: 'POST',
+				async: false,
+				data: {
+					"decide"		: "true",
+					"user"  : user,
+					"year"	: my_year,
+					"month"	: my_month,
+					"orderWork"	: "noon",
+				},
+			});
+			user = [];
+			for(var i=0; i<$("select[id*='twoWorkTimeNoon']").length; i++){
+				if($("select[id*='twoWorkTimeNoon']")[i].value === "" || $("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value){
+					user.push("無");
+				}else{
+					user.push($("select[id*='twoWorkTimeNoon']")[i].value);
 				}
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"decide"		: "true",
-						"user"  : user,
-						"year"	:my_year,
-						"month"	:my_month,
-						"orderWork"	: "morning",
-					},
-				});
-				user = [];
-				for(var i=0; i<$("select[id*='workTimeNoon']").length; i++){
-					if($("select[id*='workTimeNoon']")[i].value === ""){
-						user.push("無");
-					}else{
-						user.push($("select[id*='workTimeNoon']")[i].value);
-					}
-				}
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"decide"		: "true",
-						"user"  : user,
-						"year"	: my_year,
-						"month"	: my_month,
-						"orderWork"	: "noon",
-					},
-				});
-				user = [];
-				for(var i=0; i<$("select[id*='twoWorkTimeNoon']").length; i++){
-					if($("select[id*='twoWorkTimeNoon']")[i].value === "" || $("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value){
-						user.push("無");
-					}else{
-						user.push($("select[id*='twoWorkTimeNoon']")[i].value);
-					}
-				}
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"decide"		: "true",
-						"user"  : user,
-						"year"	: my_year,
-						"month"	: my_month,
-						"orderWork"	: "noon2",
-					},
-				});
-				user = [];
-				for(var i=0; i<$("select[id*='workTimeNight']").length; i++){
-					if($("select[id*='workTimeNight']")[i].value === ""){
-						user.push("無");
-					}else{
-						user.push($("select[id*='workTimeNight']")[i].value);
-					}
-				}
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"decide"		: "true",
-						"user"  : user,
-						"year"	: my_year,
-						"month"	: my_month,
-						"orderWork"	: "night",
-					},
-				});
-				user = [];
-				for(var i=0; i<$("select[id*='twoWorkTimeNight']").length; i++){
-					if($("select[id*='twoWorkTimeNight']")[i].value === "" || $("select[id*='workTimeNight']")[i].value === $("select[id*='twoWorkTimeNight']")[i].value){
-						user.push("無");
-					}else{
-						user.push($("select[id*='twoWorkTimeNight']")[i].value);
-					}
-				}
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"decide"		: "true",
-						"user"  : user,
-						"year"	: my_year,
-						"month"	: my_month,
-						"orderWork"	: "night2",
-					},
-				}).done(function(){
-					window.location = "http://localhost:8080/store/lobby.jsp";
-				});
 			}
+			$.ajax({
+				url: 'api/store/sWork.jsp',
+				type: 'POST',
+				async: false,
+				data: {
+					"decide"		: "true",
+					"user"  : user,
+					"year"	: my_year,
+					"month"	: my_month,
+					"orderWork"	: "noon2",
+				},
+			});
+			user = [];
+			for(var i=0; i<$("select[id*='workTimeNight']").length; i++){
+				if($("select[id*='workTimeNight']")[i].value === ""){
+					user.push("無");
+				}else{
+					user.push($("select[id*='workTimeNight']")[i].value);
+				}
+			}
+			$.ajax({
+				url: 'api/store/sWork.jsp',
+				type: 'POST',
+				async: false,
+				data: {
+					"decide"		: "true",
+					"user"  : user,
+					"year"	: my_year,
+					"month"	: my_month,
+					"orderWork"	: "night",
+				},
+			});
+			user = [];
+			for(var i=0; i<$("select[id*='twoWorkTimeNight']").length; i++){
+				if($("select[id*='twoWorkTimeNight']")[i].value === "" || $("select[id*='workTimeNight']")[i].value === $("select[id*='twoWorkTimeNight']")[i].value){
+					user.push("無");
+				}else{
+					user.push($("select[id*='twoWorkTimeNight']")[i].value);
+				}
+			}
+			$.ajax({
+				url: 'api/store/sWork.jsp',
+				type: 'POST',
+				async: false,
+				data: {
+					"decide"		: "true",
+					"user"  : user,
+					"year"	: my_year,
+					"month"	: my_month,
+					"orderWork"	: "night2",
+				},
+			}).done(function(){
+				window.location = "http://localhost:8080/store/lobby.jsp";
+			});
 		}
-		$(function() {
-			if(getCookie('identity') === "boss"){
-				$("#calendar").attr('hidden',true);
-				$("#calendarAll").attr('hidden',false);
-				$("#calendarSet").attr('hidden',false);
-				$("#div3").attr('hidden', true);
-				$("#div4").attr('hidden', true);
-				$("#div5").attr('hidden', false);
-				$("#div6").attr('hidden', false);
-				$("#limitTime").attr('hidden', true);
-				calendarAll();
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"allTable"		: "true",
-						"year"	: my_year,
-						"month"	: my_month,
-					},
-				}).done(function(data){
-					var morningT = "";
-					var noonT = "";
-					var nightT = "";
-					for(var i in JSON.parse(data)){
-						if(i.split("_")[0].includes("morning")){
-							$("#morningTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
-						}else if(i.split("_")[0].includes("noon2")){
-							$("#noonTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
-						}else if(i.split("_")[0].includes("night2")){
-							$("#nightTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
-						}
+	}
+	
+	$(function() {
+		if(getCookie('identity') === "boss"){
+			$("#calendar").attr('hidden',true);
+			$("#calendarAll").attr('hidden',false);
+			$("#calendarSet").attr('hidden',false);
+			$("#div3").attr('hidden', true);
+			$("#div4").attr('hidden', true);
+			$("#div5").attr('hidden', false);
+			$("#div6").attr('hidden', false);
+			$("#limitTime").attr('hidden', true);
+			calendarAll();
+			$.ajax({
+				url: 'api/store/sWork.jsp',
+				type: 'POST',
+				async: false,
+				data: {
+					"allTable"		: "true",
+					"year"	: my_year,
+					"month"	: my_month,
+				},
+			}).done(function(data){
+				var morningT = "";
+				var noonT = "";
+				var nightT = "";
+				for(var i in JSON.parse(data)){
+					if(i.split("_")[0].includes("morning")){
+						$("#morningTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
+					}else if(i.split("_")[0].includes("noon2")){
+						$("#noonTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
+					}else if(i.split("_")[0].includes("night2")){
+						$("#nightTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
 					}
-				});
-			}else{
-				$("#calendar").attr('hidden',false); 
-				$("#calendarAll").attr('hidden',true);
-				$("#calendarSet").attr('hidden',true);
-				$("#div3").attr('hidden', false);
-				$("#div4").attr('hidden', false);
-				$("#div5").attr('hidden', true);
-				$("#div6").attr('hidden', true);
-				calendar();
-			}
-			$("#limitTime").text("開放時間："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
-			$("#user").text(getCookie('user'));
-			
-			
-			
-			if((my_day < (daysMonth(my_month, my_year)-25) || my_day > (daysMonth(my_month, my_year)-1) )&& getCookie('identity') === "staff"){
-				$("#calendarSet").attr('hidden',true);
-				$("#alertTime").text("請注意本月排班時間是："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
-			}else if((daysMonth(my_month, my_year)-6) <= my_day <= (daysMonth(my_month, my_year)-1) && getCookie('identity') === "staff"){
-				$("#calendarSet").attr('hidden',false);
-			}
-			refreshDate();
-		  })
-		
-		function getCookie(cname) {
-			var name = cname + "=";
-			var ca = document.cookie.split(';');
-			for (var i = 0; i < ca.length; i++) {
-				var c = ca[i];
-				while (c.charAt(0) == ' ') c = c.substring(1);
-				if (c.indexOf(name) == 0)
-					return c.substring(name.length, c.length);
-			}
-			return "";
+				}
+			});
+		}else{
+			$("#calendar").attr('hidden',false); 
+			$("#calendarAll").attr('hidden',true);
+			$("#calendarSet").attr('hidden',true);
+			$("#div3").attr('hidden', false);
+			$("#div4").attr('hidden', false);
+			$("#div5").attr('hidden', true);
+			$("#div6").attr('hidden', true);
+			calendar();
 		}
-		function setCookie(cname, cvalue, exdays) {
-			var d = new Date();
-			d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-			var expires = "expires=" + d.toUTCString();
-			document.cookie = cname + "=" + cvalue + ";path=" + location.host + "; " + expires;
+		$("#limitTime").text("開放時間："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
+		$("#user").text(getCookie('user'));
+
+		if((my_day < (daysMonth(my_month, my_year)-25) || my_day > (daysMonth(my_month, my_year)-1) )&& getCookie('identity') === "staff"){
+			$("#calendarSet").attr('hidden',true);
+			$("#alertTime").text("請注意本月排班時間是："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
+		}else if((daysMonth(my_month, my_year)-6) <= my_day <= (daysMonth(my_month, my_year)-1) && getCookie('identity') === "staff"){
+			$("#calendarSet").attr('hidden',false);
 		}
-	</script>
-	<style>
+		refreshDate();
+	})
+	
+</script>
+<style>
 	.calendar{
 		width:1050px;
 		height:400px;
@@ -916,5 +909,4 @@
 	   background-image: url("image/lobby.jpg");
 	   background-size: 100% 100%;
 	}
-	</style>
-</html>
+</style>
