@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import ="ascdc.sinica.dhtext.db.DBText"%>
+<%@ page import ="db.DBText"%>
+<%@ page import ="org.json.*"%>
 
 <%
 request.setCharacterEncoding("UTF-8");
 DBText a = new DBText();
+JSONArray jar = new JSONArray();
 String account	= request.getParameter("account");
 String register = (request.getParameter("register") == null)? "" :request.getParameter("register");
 String check = (request.getParameter("check") == null)? "" :request.getParameter("check");
@@ -16,19 +18,18 @@ if(register.equals("true")){
 	String name	= request.getParameter("name");
 	String workTime	= request.getParameter("workTime");		
 	if(account != null ){
-		a.executeSQLInsert("INSERT INTO `staff-account`( `account`, `password`, `email`, `name`, `workTime`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+workTime+"')");
+		a.executeSQLUpdate("INSERT INTO `staff-account`( `account`, `password`, `email`, `name`, `workTime`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+workTime+"')");
 		if(workTime.equals("noon")||workTime.equals("night")){
-			a.executeSQLInsert("INSERT INTO `staff-account`( `account`, `password`, `email`, `name`, `workTime`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+workTime+"2')");
+			a.executeSQLUpdate("INSERT INTO `staff-account`( `account`, `password`, `email`, `name`, `workTime`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+workTime+"2')");
 		}
 	}
-	a.closeConnection();
 }else if(check.equals("true")){
-	String data[][]=a.getData("SELECT `account` FROM `staff-account`");
-	a.closeConnection();
-	if(data != null){
-		for(int i=0;i<data.length;i++){
+	jar = a.getData("SELECT `account` FROM `staff-account`");
+	if(!jar.isEmpty()) {
+		for(int i=0;i<jar.length();i++) {
 			result = true;
-			if(account.equals(data[i][0])){
+			JSONObject obj = jar.getJSONObject(i);
+			if(obj.get("account").equals(account)){
 				result = false;
 				response.getWriter().print(result); 
 				break;
@@ -36,23 +37,23 @@ if(register.equals("true")){
 		}
 		if(result != false){
 			response.getWriter().print(result);
-		}		
+		}	
 	}else{
 		result = true;
 		response.getWriter().print(result); 
 	}
 }else if(sLogIn.equals("true")){
 	String password	= request.getParameter("password");
-	String data[][]=a.getData("SELECT  `account`,`password`,`name` FROM `staff-account`");
-	a.closeConnection();
+	jar = a.getData("SELECT  `account`,`password`,`name` FROM `staff-account`");
 	boolean alive = false;
-	if(data != null){
-		for(int i=0;i<data.length;i++){
-			if(account.equals(data[i][0])){
-				if(password.equals(data[i][1])){
-					String userInfo = "true;"+data[i][2];
+	if(!jar.isEmpty()) {
+		for(int i=0;i<jar.length();i++) {
+			JSONObject obj = jar.getJSONObject(i);	
+			if(account.equals(obj.get("account"))){
+				if(password.equals(obj.get("password"))){
+					String userInfo = "true;"+obj.get("name");
 					response.getWriter().print(userInfo);
-					session.setAttribute( "user", data[i][2] );
+					session.setAttribute( "user", obj.get("name"));
 					alive = true;
 					break;
 				}else{
@@ -69,5 +70,5 @@ if(register.equals("true")){
 		response.getWriter().print("afalse");
 	}
 }
-
+a.closeConnection();
 %>

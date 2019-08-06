@@ -1,9 +1,11 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import ="ascdc.sinica.dhtext.db.DBText"%>
+<%@ page import ="db.DBText"%>
+<%@ page import ="org.json.*"%>
 
 <%
 request.setCharacterEncoding("UTF-8");
 DBText a = new DBText();
+JSONArray jar = new JSONArray();
 String account	= request.getParameter("account");
 String register = (request.getParameter("register") == null)? "" :request.getParameter("register");
 String check = (request.getParameter("check") == null)? "" :request.getParameter("check");
@@ -15,16 +17,17 @@ if(register.equals("true")){
 	String email	= request.getParameter("email");
 	String name	= request.getParameter("name");	
 	if(account != null){
-		a.executeSQLInsert("INSERT INTO `boss-account`( `account`, `password`, `email`, `name`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"')");
+		a.executeSQLUpdate("INSERT INTO `boss-account`( `account`, `password`, `email`, `name`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"')");
 	}
 	a.closeConnection();
 }else if(check.equals("true")){
-	String data[][]=a.getData("SELECT  `account` FROM `boss-account`");
+	jar = a.getData("SELECT  `account` FROM `boss-account`");
 	a.closeConnection();
-	if(data != null){
-		for(int i=0;i<data.length;i++){
+	if(!jar.isEmpty()){
+		for(int i=0;i<jar.length();i++){
+			JSONObject obj = jar.getJSONObject(i);
 			result = true;
-			if(account.equals(data[i][0])){
+			if(account.equals(obj.get("account"))){
 				result = false;
 				response.getWriter().print(result); 
 				break;
@@ -39,14 +42,15 @@ if(register.equals("true")){
 	}
 }else if(bLogIn.equals("true")){
 	String password	= request.getParameter("password");
-	String data[][]=a.getData("SELECT  `account`,`password`,`name` FROM `boss-account`");
+	jar = a.getData("SELECT  `account`,`password`,`name` FROM `boss-account`");
 	a.closeConnection();
 	boolean alive = false;
-	if(data != null){
-		for(int i=0;i<data.length;i++){
-			if(account.equals(data[i][0])){
-				if(password.equals(data[i][1])){
-					String userInfo = "true;"+data[i][2];
+	if(!jar.isEmpty()){
+		for(int i=0;i<jar.length();i++){
+			JSONObject obj = jar.getJSONObject(i);
+			if(account.equals(obj.get("account"))){
+				if(password.equals(obj.get("password"))){
+					String userInfo = "true;"+obj.get("name");
 					response.getWriter().print(userInfo);
 					alive = true;
 					break;

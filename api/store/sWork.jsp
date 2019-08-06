@@ -1,11 +1,12 @@
-<%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import ="ascdc.sinica.dhtext.db.DBText"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page import ="db.DBText"%>
 <%@ page import ="java.util.*"%>
 <%@ page import ="org.json.*"%>
 
 <%
 request.setCharacterEncoding("UTF-8");
 DBText a = new DBText();
+JSONArray jar = new JSONArray();
 String arrange = (request.getParameter("arrange") == null)? "" :request.getParameter("arrange");
 String edit = (request.getParameter("edit") == null)? "" :request.getParameter("edit");
 String decide = (request.getParameter("decide") == null)? "" :request.getParameter("decide");
@@ -18,9 +19,13 @@ if(arrange.equals("true")){
 	String month = request.getParameter("month");
 	String year	= request.getParameter("year");
 	if(day != null ){
-		String b[][] =a.getData("SELECT `workTime` FROM `staff-account` WHERE `name`='"+user+"'");
-		for(int i=0 ; i< day.length ;i++){
-			a.executeSQLInsert("INSERT INTO `staff-arrange`( `user`, `year`, `month`, `day`, `orderWork`) VALUES ('"+user+"','"+year+"','"+(Integer.parseInt(month)+1)+"','"+day[i]+"','"+b[0][0]+"')");
+		String sql = "SELECT `workTime` FROM `staff-account` WHERE `name`= '"+user+"'";
+		jar = a.getData(sql);
+		if(!jar.isEmpty()){
+			for(int i=0 ; i< day.length ;i++){
+				JSONObject obj = jar.getJSONObject(0);
+				a.executeSQLUpdate("INSERT INTO `staff-arrange`( `user`, `year`, `month`, `day`, `orderWork`) VALUES ('"+user+"','"+year+"','"+(Integer.parseInt(month)+2)+"','"+day[i]+"','"+obj.get("workTime")+"')");
+			}
 		}
 	}
 }else if(edit.equals("true")){
@@ -28,7 +33,7 @@ if(arrange.equals("true")){
 	String[] day = request.getParameterValues("day[]");
 	if(day != null ){
 		for(int i =0; i< day.length ; i++){
-			a.updateData("DELETE FROM `staff-arrange` WHERE `day` = '"+day[i]+"' AND `user` ='"+user+"'");
+			a.executeSQLUpdate("DELETE FROM `staff-arrange` WHERE `day` = '"+day[i]+"' AND `user` ='"+user+"'");
 		}
 	}
 }else if(decide.equals("true")){
@@ -39,8 +44,8 @@ if(arrange.equals("true")){
 	if(user != null ){
 		for(int i=0 ; i< user.length ;i++){
 			if(!user[i].equals("無")){
-				a.updateData("DELETE FROM `staff-worktime` WHERE `day` = '"+(i+1)+"' AND `orderWork` ='"+orderWork+"'");
-				a.executeSQLInsert("INSERT INTO `staff-worktime`( `user`, `year`, `month`, `day`, `orderWork`) VALUES ('"+user[i]+"','"+year+"','"+(Integer.parseInt(month)+1)+"','"+(i+1)+"','"+orderWork+"')");
+				a.executeSQLUpdate("DELETE FROM `staff-worktime` WHERE `day` = '"+(i+1)+"' AND `orderWork` ='"+orderWork+"'");
+				a.executeSQLUpdate("INSERT INTO `staff-worktime`( `user`, `year`, `month`, `day`, `orderWork`) VALUES ('"+user[i]+"','"+year+"','"+(Integer.parseInt(month)+1)+"','"+(i+1)+"','"+orderWork+"')");
 			}
 		}
 	}
@@ -49,34 +54,37 @@ if(arrange.equals("true")){
 	String year = request.getParameter("year");
 	String month = request.getParameter("month");
 	String day = "";
-	String b[][] = a.getData("SELECT `day` FROM `staff-worktime` WHERE `user`='"+user+"' AND `year` ='"+year+"' AND `month` ='"+(Integer.parseInt(month)+1)+"'");
-	if(b != null ){
-		for(int i=0 ; i< b.length ;i++){
-			day += b[i][0] + "、";
+	jar = a.getData("SELECT `day` FROM `staff-worktime` WHERE `user`='"+user+"' AND `year` ='"+year+"' AND `month` ='"+(Integer.parseInt(month)+1)+"'");
+	if(!jar.isEmpty()){
+		for(int i=0 ; i< jar.length() ;i++){
+			JSONObject obj = jar.getJSONObject(i);
+			day += obj.get("day") + "、";
 		}
 	}
 	response.getWriter().print(day);
 }else if(allTable.equals("true")){
 	String year = request.getParameter("year");
 	String month = request.getParameter("month");
-	String user[][] = a.getData("SELECT `name` ,`workTime` FROM `staff-account`");
+	JSONArray user = a.getData("SELECT `name` ,`workTime` FROM `staff-account`");
 	ArrayList<String> name = new ArrayList<>();
 	JSONObject jsonO = new JSONObject();
-	if(user != null ){
-		for(int i=0 ; i< user.length ;i++){
-			name.add(user[i][1]+"_"+user[i][0]);
+	Set<String> setName = new LinkedHashSet<>(); 
+	if(!user.isEmpty() ){
+		for(int i=0 ; i< user.length() ;i++){
+			JSONObject obj = user.getJSONObject(i);
+			name.add(obj.get("workTime")+"_"+obj.get("name"));
 		}
 	}
-	Set<String> setName = new LinkedHashSet<>(); 
 	setName.addAll(name); 
 	name.clear(); 
 	name.addAll(setName);
 	for(int i=0 ;i<name.size();i++){
 		String day = "";
-		String b[][] = a.getData("SELECT `day` FROM `staff-worktime` WHERE `user`='"+name.get(i).split("_")[1]+"' AND `year` ='"+year+"' AND `month` ='"+(Integer.parseInt(month)+1)+"'");
-		if(b != null ){
-			for(int j=0 ; j< b.length ;j++){
-				day += b[j][0] + "、";
+		jar = a.getData("SELECT `day` FROM `staff-worktime` WHERE `user`='"+name.get(i).split("_")[1]+"' AND `year` ='"+year+"' AND `month` ='"+(Integer.parseInt(month)+1)+"'");
+		if(!jar.isEmpty()){
+			for(int j=0 ; j< jar.length() ;j++){
+				JSONObject obj = jar.getJSONObject(j);
+				day += obj.get("day") + "、";
 			}
 		}
 		if(!day.equals("")){

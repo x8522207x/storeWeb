@@ -1,5 +1,6 @@
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
-<%@ page import ="ascdc.sinica.dhtext.db.DBText"%>
+<%@ page import ="db.DBText"%>
+<%@ page import ="org.json.*"%>
 <%@ page import ="java.text.*"%>
 <%@ page import ="java.util.*"%>
 <%@ page import ="java.time.YearMonth"%>
@@ -21,6 +22,7 @@
 							YearMonth yearMonthObject = YearMonth.of(Calendar.DAY_OF_YEAR, Calendar.DAY_OF_MONTH);
 							int daysInMonth = yearMonthObject.lengthOfMonth();
 							DBText a = new DBText();
+							JSONArray jar = new JSONArray();
 %>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -63,12 +65,12 @@
 						<div class="title">
 							<h1 class="green" id="calendar-title">Month</h1>
 							<h2 class="green-small" id="calendar-year">Year</h2>
-							<!--<a class="prev" id="prev">
+							<a class="prev" id="prev">
 								<img src="image/left.png" height="24" width="24" >
 							</a>
 							<a class="next" id="next">
 								<img src="image/right.png" height="24" width="24" >
-							</a>-->
+							</a>
 						</div>
 						<div class="body">
 							<div class="lightgrey body-list">
@@ -139,7 +141,7 @@
 						%>
 						<input type="checkbox" id="arrange<%=i%>"><%=i%></input>
 						<%
-								if(i%5 == 0){
+								if(i%7 == 0){
 						%>
 						<br>
 						<%
@@ -156,13 +158,15 @@
 						<h4>已選的日期</h4>
 						<%
 							a.connection();
-							String b[][] =a.getData("SELECT `day` FROM `staff-arrange` WHERE `user` ='"+session.getAttribute( "user" )+"' ORDER BY `staff-arrange`.`day` ASC");
-							if(b != null){
-								for(int i = 0; i < b.length; i++){
+							String sql = "SELECT `day` FROM `staff-arrange` WHERE `user` ='"+session.getAttribute( "user" )+"' and `month`="+(now.get(Calendar.MONTH)+2)+" ORDER BY CAST(`staff-arrange`.`day` AS UNSIGNED) ASC";
+							jar =a.getData(sql);
+							if(!jar.isEmpty()){
+								for(int i = 0; i < jar.length(); i++){
+									JSONObject obj = jar.getJSONObject(i);
 						%>
-						<input type="checkbox" id="edit<%=b[i][0]%>"><%=b[i][0]%></input>
+						<input type="checkbox" id="edit<%=obj.get("day")%>"><%=obj.get("day")%></input>
 						<%
-									if(i%5 == 4){
+									if(i%7 == 6){
 						%>
 						<br>
 						<%
@@ -187,17 +191,18 @@
 								ArrayList<String> workerChoose2 = new ArrayList<String>();
 								ArrayList<String> worker3 = new ArrayList<String>();
 								ArrayList<String> workerChoose3 = new ArrayList<String>();
-								String morningWorker[][] =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'morning'");
+								JSONArray morningWorker = a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'morning'");
 								for(int i=1; i<=daysInMonth; i++){
 							%>
 							<h6><%=i%>(選擇人員：<span>
 								<select id="workTimeMorning<%=i%>">
 									<option value=""></option>
 								<%
-									if(morningWorker != null){
-										for(int j=0; j<morningWorker.length; j++){
+									if(!morningWorker.isEmpty()){
+										for(int j=0; j<morningWorker.length(); j++){
+											JSONObject obj = morningWorker.getJSONObject(j);
 								%>
-									<option value="<%=morningWorker[j][0]%>"><%=morningWorker[j][0]%></option>
+									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
 									<%
 										}
 									}
@@ -205,24 +210,27 @@
 								</select>
 							</span>）</h6>
 								<%
-									String c[][] =a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'morning'");
-									String decidePeople[][] =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'morning'");
+									JSONArray c = a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'morning'");
+									JSONArray decidePeople = a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'morning'");
 									String adviceMor = "";
 									String unadviceMor = "";
 									String decideMor = "";
-									if(c != null){
-										for(int j=0; j<c.length; j++){
-											workerChoose.add(c[j][0]);//這一天有誰可以工作
+									if(!c.isEmpty()){
+										for(int j=0; j<c.length(); j++){
+											JSONObject obj = c.getJSONObject(j);
+											workerChoose.add(obj.get("user").toString());//這一天有誰可以工作
 										}
 									}
-									if(decidePeople != null){
+									if(!decidePeople.isEmpty()){
 										for(int j=0; j<1; j++){
-											decideMor += decidePeople[j][0];
+											JSONObject obj = decidePeople.getJSONObject(j);
+											decideMor += obj.get("user");
 										}
 									}
-									if(morningWorker != null){
-										for(int j=0; j<morningWorker.length; j++){
-											worker.add(morningWorker[j][0]);//工作時間是早上的人
+									if(!morningWorker.isEmpty()){
+										for(int j=0; j<morningWorker.length(); j++){
+											JSONObject obj = morningWorker.getJSONObject(j);
+											worker.add(obj.get("name").toString());//工作時間是早上的人
 										}
 									}
 									if(workerChoose.size() != 0){
@@ -272,18 +280,19 @@
 						<div class="col">
 							<h5>8:00 a.m. ~4:00 p.m.(2人/天)</h5>
 							<%
-								String noonWorker[][] =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'noon'");
-								String noonWorker2[][] =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'noon2'");
+								JSONArray noonWorker =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'noon'");
+								JSONArray noonWorker2 =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'noon2'");
 								for(int i=1; i<=daysInMonth; i++){
 							%>
 							<h6><%=i%>(選擇人員：<span>
 								<select id="workTimeNoon<%=i%>">
 									<option value=""></option>
 								<%
-									if(noonWorker != null){
-										for(int j=0; j<noonWorker.length; j++){
+									if(!noonWorker.isEmpty()){
+										for(int j=0; j<noonWorker.length(); j++){
+											JSONObject obj = noonWorker.getJSONObject(j);
 								%>
-									<option value="<%=noonWorker[j][0]%>"><%=noonWorker[j][0]%></option>
+									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
 									<%
 										}
 									}
@@ -292,10 +301,11 @@
 								<select id="twoWorkTimeNoon<%=i%>">
 									<option value=""></option>
 								<%
-									if(noonWorker2 != null){
-										for(int j=0; j<noonWorker2.length; j++){
+									if(!noonWorker2.isEmpty()){
+										for(int j=0; j<noonWorker2.length(); j++){
+											JSONObject obj = noonWorker.getJSONObject(j);
 								%>
-									<option value="<%=noonWorker2[j][0]%>"><%=noonWorker2[j][0]%></option>
+									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
 									<%
 										}
 									}
@@ -303,30 +313,34 @@
 								</select>
 							</span>)</h6>
 								<%
-									String c[][] =a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'noon'");
-									String decidePeople2[][] =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'noon'");
-									String decidePeople3[][] =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'noon2'");
+									JSONArray d =a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'noon'");
+									JSONArray decidePeople2 =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'noon'");
+									JSONArray decidePeople3 =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'noon2'");
 									String decideNoo = "";
 									String adviceNoo = "";
 									String unadviceNoo = "";
-									if(c != null){
-										for(int j=0; j<c.length; j++){
-											workerChoose2.add(c[j][0]);//這一天有誰可以工作
+									if(!d.isEmpty()){
+										for(int j=0; j<d.length(); j++){
+											JSONObject obj = d.getJSONObject(j);
+											workerChoose2.add(obj.get("user").toString());//這一天有誰可以工作
 										}
 									}
-									if(decidePeople2 != null){
+									if(!decidePeople2.isEmpty()){
 										for(int j=0; j<1; j++){
-											decideNoo += decidePeople2[j][0]+"、";
+											JSONObject obj = decidePeople2.getJSONObject(j);
+											decideNoo += obj.get("user")+"、";
 										}
 									}
-									if(decidePeople3 != null){
+									if(!decidePeople3.isEmpty()){
 										for(int j=0; j<1; j++){
-											decideNoo += decidePeople3[j][0]+"、";
+											JSONObject obj = decidePeople2.getJSONObject(j);
+											decideNoo += obj.get("user")+"、";
 										}
 									}
-									if(noonWorker != null){
-										for(int j=0; j<noonWorker.length; j++){
-											worker2.add(noonWorker[j][0]);//工作時間是早上的人
+									if(!noonWorker.isEmpty()){
+										for(int j=0; j<noonWorker.length(); j++){
+											JSONObject obj = noonWorker.getJSONObject(j);
+											worker2.add(obj.get("name").toString());//工作時間是早上的人
 										}
 									}
 									if(workerChoose2.size() != 0){				
@@ -379,18 +393,19 @@
 						<div class="col">
 							<h5>4:00 p.m. ~12:00 a.m.(2人/天)</h5>
 							<%
-								String nightWorker[][] =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'night'");
-								String nightWorker2[][] =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'night2'");
+								JSONArray nightWorker =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'night'");
+								JSONArray nightWorker2 =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'night2'");
 								for(int i=1; i<=daysInMonth; i++){
 							%>
 							<h6><%=i%>(選擇人員：<span>
 								<select id="workTimeNight<%=i%>">
 									<option value=""></option>
 								<%
-									if(nightWorker != null){
-										for(int j=0; j<nightWorker.length; j++){
+									if(!nightWorker.isEmpty()){
+										for(int j=0; j<nightWorker.length(); j++){
+											JSONObject obj = nightWorker.getJSONObject(j);
 								%>
-									<option value="<%=nightWorker[j][0]%>"><%=nightWorker[j][0]%></option>
+									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
 									<%
 										}
 									}
@@ -399,10 +414,11 @@
 								<select id="twoWorkTimeNight<%=i%>">
 									<option value=""></option>
 								<%
-									if(nightWorker2 != null){
-										for(int j=0; j<nightWorker2.length; j++){
+									if(!nightWorker2.isEmpty()){
+										for(int j=0; j<nightWorker2.length(); j++){
+											JSONObject obj = nightWorker2.getJSONObject(j);
 								%>
-									<option value="<%=nightWorker2[j][0]%>"><%=nightWorker2[j][0]%></option>
+									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
 									<%
 										}
 									}
@@ -410,30 +426,34 @@
 								</select>
 							</span>)</h6>
 								<%
-									String c[][] =a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'night'");
-									String decidePeople4[][] =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'night'");
-									String decidePeople5[][] =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'night2'");
+									JSONArray e =a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'night'");
+									JSONArray decidePeople4 =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'night'");
+									JSONArray decidePeople5 =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'night2'");
 									String adviceNig = "";
 									String unadviceNig = "";
 									String decideNig = "";
-									if(c != null){
-										for(int j=0; j<c.length; j++){
-											workerChoose3.add(c[j][0]);//這一天有誰可以工作
+									if(!e.isEmpty()){
+										for(int j=0; j<e.length(); j++){
+											JSONObject obj = e.getJSONObject(j);
+											workerChoose3.add(obj.get("user").toString());//這一天有誰可以工作
 										}
 									}
-									if(decidePeople4 != null){
+									if(!decidePeople4.isEmpty()){
 										for(int j=0; j<1; j++){
-											decideNig += decidePeople4[j][0]+"、";
+											JSONObject obj = decidePeople4.getJSONObject(j);
+											decideNig += obj.get("user")+"、";
 										}
 									}
-									if(decidePeople5 != null){
+									if(!decidePeople5.isEmpty()){
 										for(int j=0; j<1; j++){
-											decideNig += decidePeople5[j][0]+"、";
+											JSONObject obj = decidePeople5.getJSONObject(j);
+											decideNig += obj.get("user")+"、";
 										}
 									}
-									if(nightWorker != null){
-										for(int j=0; j<nightWorker.length; j++){
-											worker3.add(nightWorker[j][0]);//工作時間是早上的人
+									if(!nightWorker.isEmpty()){
+										for(int j=0; j<nightWorker.length(); j++){
+											JSONObject obj = nightWorker.getJSONObject(j);
+											worker3.add(obj.get("name").toString());//工作時間是早上的人
 										}
 									}
 									if(workerChoose3.size() != 0){				
