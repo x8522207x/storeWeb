@@ -10,8 +10,8 @@ String account	= request.getParameter("account");
 String register = (request.getParameter("register") == null)? "" :request.getParameter("register");
 String check = (request.getParameter("check") == null)? "" :request.getParameter("check");
 String sLogIn = (request.getParameter("sLogIn") == null)? "" :request.getParameter("sLogIn");
-a.connection();
 boolean result = true;
+a.connection();
 if(register.equals("true")){
 	String password	= request.getParameter("password");
 	String email	= request.getParameter("email");

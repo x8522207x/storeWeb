@@ -26,16 +26,19 @@
 </html>
 <script>
 	var identity = "";
+	
 	function staffLog(){
 		identity = "staff";
 		$("#role")[0].textContent = "員工";
 		$("#loginDiv").attr('hidden',false);
 	}
+	
 	function bossLog(){
 		identity = "boss";
 		$("#role")[0].textContent = "老闆";
 		$("#loginDiv").attr('hidden',false);
 	}
+	
 	$("#loginButton").click(function(){
 		var redirect = false;
 		var user = "";

@@ -13,13 +13,13 @@ String edit = (request.getParameter("edit") == null)? "" :request.getParameter("
 String decide = (request.getParameter("decide") == null)? "" :request.getParameter("decide");
 String getWorkTime = (request.getParameter("getWorkTime") == null)? "" :request.getParameter("getWorkTime");
 String allTable = (request.getParameter("allTable") == null)? "" :request.getParameter("allTable");
+String month = request.getParameter("month");
+String year	= request.getParameter("year");
 a.connection();
 if(arrange.equals("true")){
 	String user = request.getParameter("user");
 	String name = request.getParameter("name");
 	String[] day = request.getParameterValues("day[]");
-	String month = request.getParameter("month");
-	String year	= request.getParameter("year");
 	if(day != null ){
 		sql = "SELECT `workTime` FROM `staff-account` WHERE `name`= '"+name+"'";
 		jar = a.getData(sql);
@@ -42,8 +42,6 @@ if(arrange.equals("true")){
 	}
 }else if(decide.equals("true")){
 	String[] name = request.getParameterValues("name[]");
-	String year = request.getParameter("year");
-	String month = request.getParameter("month");
 	String orderWork = request.getParameter("orderWork");
 	if(name != null ){
 		for(int i=0 ; i< name.length ;i++){
@@ -62,8 +60,6 @@ if(arrange.equals("true")){
 	}
 }else if(getWorkTime.equals("true")){
 	String name = request.getParameter("name");
-	String year = request.getParameter("year");
-	String month = request.getParameter("month");
 	String day = "";
 	sql = "SELECT `day` FROM `staff-worktime` WHERE `name`='"+name+"' AND `year` ='"+year+"' AND `month` ='"+(Integer.parseInt(month)+1)+"' ORDER BY CAST(`staff-worktime`.`day` AS UNSIGNED) ASC";
 	jar = a.getData(sql);
@@ -75,8 +71,6 @@ if(arrange.equals("true")){
 	}
 	response.getWriter().print(day);
 }else if(allTable.equals("true")){
-	String year = request.getParameter("year");
-	String month = request.getParameter("month");
 	sql = "SELECT `user`, `name`, `workTime` FROM `staff-account`";
 	JSONArray name = a.getData(sql);
 	ArrayList<String> nameAL = new ArrayList<>();

@@ -208,8 +208,8 @@
 								</select>
 							</span>）</h6>
 								<%
-									JSONArray c = a.getData("SELECT `user`,`name` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'morning'");
-									JSONArray decidePeople = a.getData("SELECT `user`,`name` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'morning'");
+									JSONArray c = a.getData("SELECT `user`,`name` FROM `staff-arrange` WHERE `day` ='" + i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'morning'");
+									JSONArray decidePeople = a.getData("SELECT `user`,`name` FROM `staff-worktime` WHERE `day` ='" + i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'morning'");
 									String adviceMor = "";
 									String unadviceMor = "";
 									String decideMor = "";
@@ -247,21 +247,11 @@
 									for(int j=0; j<worker.size(); j++){
 										unadviceMor += worker.get(j)+"、";
 									}
-									if(adviceMor.length() >0){
-									adviceMor = adviceMor.substring(0, adviceMor.length()-1);
-									}
-									if(unadviceMor.length()>0){
-									unadviceMor = unadviceMor.substring(0, unadviceMor.length()-1);
-									}
-									if(adviceMor.equals("")){
-										adviceMor = "無";
-									}
-									if(decideMor.equals("")){
-										decideMor = "無";
-									}
-									if(unadviceMor.equals("")){
-										unadviceMor = "無";
-									}
+									adviceMor = adviceMor.length() > 0 ? adviceMor.substring(0, adviceMor.length() - 1) : adviceMor;
+									unadviceMor = unadviceMor.length() > 0 ? unadviceMor.substring(0, unadviceMor.length() - 1) : unadviceMor;
+									adviceMor = adviceMor.equals("") ? "無" : adviceMor;
+									decideMor = decideMor.equals("") ? "無" : decideMor;
+									unadviceMor = unadviceMor.equals("") ? "無" : unadviceMor;
 									workerChoose.clear();
 									worker.clear();
 								%>
@@ -352,24 +342,12 @@
 									for(int j=0; j<worker2.size(); j++){
 										unadviceNoo += worker2.get(j)+"、";
 									}
-									if(adviceNoo.length() >0){
-										adviceNoo = adviceNoo.substring(0, adviceNoo.length()-1);
-									}
-									if(unadviceNoo.length()>0){
-										unadviceNoo = unadviceNoo.substring(0, unadviceNoo.length()-1);
-									}
-									if(decideNoo.length() >0){
-										decideNoo = decideNoo.substring(0, decideNoo.length()-1);
-									}
-									if(adviceNoo.equals("")){
-										adviceNoo = "無";
-									}
-									if(decideNoo.equals("")){
-										decideNoo = "無";
-									}
-									if(unadviceNoo.equals("")){
-										unadviceNoo = "無";
-									}
+									adviceNoo = adviceNoo.length() > 0 ? adviceNoo.substring(0, adviceNoo.length() - 1) : adviceNoo;
+									unadviceNoo = unadviceNoo.length() > 0 ? unadviceNoo.substring(0, unadviceNoo.length() - 1) : unadviceNoo;
+									decideNoo = decideNoo.length() > 0 ? decideNoo.substring(0, decideNoo.length() - 1) : decideNoo;
+									adviceNoo = adviceNoo.equals("") ? "無" : adviceNoo;
+									decideNoo = decideNoo.equals("") ? "無" : decideNoo;
+									unadviceNoo = unadviceNoo.equals("") ? "無" : unadviceNoo;
 									workerChoose2.clear();
 									worker2.clear();
 								%>
@@ -460,24 +438,14 @@
 									for(int j=0; j<worker3.size(); j++){
 										unadviceNig += worker3.get(j)+"、";
 									}
-									if(adviceNig.length() >0){
-										adviceNig = adviceNig.substring(0, adviceNig.length()-1);
-									}
-									if(unadviceNig.length()>0){
-										unadviceNig = unadviceNig.substring(0, unadviceNig.length()-1);
-									}
-									if(decideNig.length() >0){
-										decideNig = decideNig.substring(0, decideNig.length()-1);
-									}
-									if(adviceNig.equals("")){
-										adviceNig = "無";
-									}
-									if(decideNig.equals("")){
-										decideNig = "無";
-									}
-									if(unadviceNig.equals("")){
-										unadviceNig = "無";
-									}
+									
+									adviceNig = adviceNig.length() > 0 ? adviceNig.substring(0, adviceNig.length() - 1) : adviceNig;
+									unadviceNig = unadviceNig.length() > 0 ? unadviceNig.substring(0, unadviceNig.length() - 1) : unadviceNig;
+									decideNig = decideNig.length() > 0 ? decideNig.substring(0, decideNig.length() - 1) : decideNig;
+									adviceNig = adviceNig.equals("") ? "無" : adviceNig;
+									decideNig = decideNig.equals("") ? "無" : decideNig;
+									unadviceNig = unadviceNig.equals("") ? "無" : unadviceNig;
+									
 									workerChoose3.clear();
 									worker3.clear();
 								%>
@@ -516,27 +484,30 @@
 	var my_year = my_date.getFullYear();
 	var my_month = my_date.getMonth();
 	var my_day = my_date.getDate();
+	
 	function dayStart(month, year) {
 		var tmpDate = new Date(year, month, 1);
 		return (tmpDate.getDay());
 	}
+	
 	function daysMonth(month, year) {
 		var tmp = year % 4;
-		if (tmp == 0) {
+		if (tmp === 0) {
 			return (month_olympic[month]);
 		} else {
 			return (month_normal[month]);
 		}
 	}
+	
 	function refreshDate(){
 		var str = "";
 		var totalDay = daysMonth(my_month, my_year); 
 		var firstDay = dayStart(my_month, my_year); 
 		var myclass;
-		for(var i=1; i<firstDay; i++){ 
+		for(var i=1 ; i< firstDay; i++){ 
 			str += "<li id=></li>"; 
 		}
-		for(var i=1; i<=totalDay; i++){
+		for(var i=1 ; i<= totalDay; i++){
 			str += "<li id="+my_year+"_"+(my_month+1)+"_"+i+">"+i+"</li>";
 		}
 		holder.innerHTML = str; 
@@ -553,26 +524,30 @@
 				"year"	: my_year,
 			},
 		}).done(function (data){
-			for(var i=0;i<data.split("、").length-1;i++){
+			for(var i= 0; i< data.split("、").length-1; i++){
 				$("#"+my_year+"_"+(my_month+1)+"_"+data.split("、")[i])[0].className += "green-small";
 			}
 		});
 	}
+	
 	function calendar(){
 		$("#main1").attr('hidden',false);
 		$("#main2").attr('hidden',true);
 		$("#main3").attr('hidden',true);
 	}
+	
 	function calendarAll(){
 		$("#main1").attr('hidden',true);
 		$("#main2").attr('hidden',false);
 		$("#main3").attr('hidden',true);
 	}
+	
 	function calendarSet(){
 		$("#main1").attr('hidden',true);
 		$("#main2").attr('hidden',true);
 		$("#main3").attr('hidden',false);
 	}
+	
 	/*prev.onclick = function(e){
 		e.preventDefault();
 		my_month--;
@@ -632,18 +607,18 @@
 	$("#logOut").click(function(){
 		deleteCookie('identity');
 		deleteCookie('name');
+		deleteCookie('user');
 		$(location).attr('href','http://localhost:8080/storebackup/login.jsp')
 	})
 	
-	
 	function arrangeSubmit(){
 		var day = [];
-		for(var i=0 ; i<$("input[id*='arrange']").length; i++){
+		for(var i= 0; i< $("input[id*='arrange']").length; i++){
 			if($("input[id*='arrange']")[i].checked === true){
 				day.push(i+1);
 			}
 		}
-		for(var i=0; i<$("input[id*='edit']").length; i++){
+		for(var i= 0; i< $("input[id*='edit']").length; i++){
 			for(var j=0; j<day.length;j++){
 				if(day[j] == $("input[id*='edit']")[i].nextSibling.data.trim()){
 					day.splice(j, 1);
@@ -670,7 +645,7 @@
 	
 	function arrangeDelete(){
 		var day = [];
-		for(var i=0 ; i<$("input[id*='edit']").length; i++){
+		for(var i= 0; i< $("input[id*='edit']").length; i++){
 			if($("input[id*='edit']")[i].checked === true){
 				day.push($("input[id*='edit']")[i].nextSibling.data.trim());
 			}
@@ -692,7 +667,7 @@
 	function bossArrange(){
 		var noonAir = "";
 		var nightAir = "";
-		for(var i=0; i<$("select[id*='workTimeNoon']").length; i++){
+		for(var i= 0; i<$("select[id*='workTimeNoon']").length; i++){
 			if(($("select[id*='workTimeNoon']")[i].value === "" && $("select[id*='twoWorkTimeNoon']")[i].value !== "") || ($("select[id*='workTimeNoon']")[i].value !== "" && $("select[id*='twoWorkTimeNoon']")[i].value === "") || ($("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value && $("select[id*='twoWorkTimeNoon']")[i].value !== "")){
 				noonAir += (i+1)+"、";
 			}
@@ -700,7 +675,7 @@
 				nightAir += (i+1)+"、";
 			}
 		}
-		if(noonAir.length >0 || nightAir.length >0){
+		if(noonAir.length > 0 || nightAir.length > 0){
 			noonAir = noonAir.substring(0, noonAir.length-1);
 			nightAir = nightAir.substring(0, nightAir.length-1);
 			alert("午班："+noonAir+" 以及 晚班："+nightAir+" 有少派人 或者 重複指派人");
@@ -784,7 +759,6 @@
 			$("#div6").attr('hidden', false);
 			$("#limitTime").attr('hidden', true);
 			$("#bossArrange").attr('hidden', false);
-			calendarAll();
 			$.ajax({
 				url: 'api/store/sWork.jsp',
 				type: 'POST',
@@ -816,7 +790,6 @@
 			$("#div4").attr('hidden', false);
 			$("#div5").attr('hidden', true);
 			$("#div6").attr('hidden', true);
-			calendar();
 		}
 		$("#limitTime").text("開放時間："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
 		$("#name").text(getCookie('name'));
@@ -827,6 +800,7 @@
 		}else if((daysMonth(my_month, my_year)-6) <= my_day <= (daysMonth(my_month, my_year)-1) && getCookie('identity') === "staff"){
 			$("#calendarSet").attr('hidden',false);
 		}
+		calendarAll();
 		refreshDate();
 	})
 	
