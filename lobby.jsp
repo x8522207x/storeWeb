@@ -8,16 +8,16 @@
 	<jsp:include page='includes/head.jsp'></jsp:include>
 	<script>
 		var user = getCookie('user');
+		var name = getCookie('name');
 		var identity = getCookie('identity');
-		if(user == "" & identity == ""){
+		if(user === "" && identity === "" && name === ""){
 			var result = alert("請登入");
-			window.location = "http://localhost:8080/store/login.jsp";
+			window.location = "http://localhost:8080/storebackup/login.jsp";
 		}
-	
 	</script>
 	<%
 								Calendar now = Calendar.getInstance();
-								YearMonth yearMonthObject = YearMonth.of(Calendar.DAY_OF_YEAR, Calendar.DAY_OF_MONTH);
+								YearMonth yearMonthObject = YearMonth.of(Calendar.DAY_OF_YEAR, Calendar.DAY_OF_MONTH+1);
 								int daysInMonth = yearMonthObject.lengthOfMonth();
 								DBText a = new DBText();
 								JSONArray jar = new JSONArray();
@@ -29,7 +29,7 @@
 				<span class="navbar-toggler-icon"></span>
 			</button>
 			<h4 id="alertTime" style="text-align: center;color: red;"></h4>
-			<h4 id="user" style="position:absolute;right:80px;"></h4>
+			<h4 id="name" style="position:absolute;right:80px;"></h4>
 			<a class="btn btn-outline-primary" id="logOut" style="position:absolute;right:10px;">登出</a>
 		</nav>
 		<div class="container-fluid">
@@ -156,7 +156,7 @@
 						<h4>已選的日期</h4>
 						<%
 							a.connection();
-							String sql = "SELECT `day` FROM `staff-arrange` WHERE `user` ='"+session.getAttribute( "user" )+"' and `month`="+(now.get(Calendar.MONTH)+2)+" ORDER BY CAST(`staff-arrange`.`day` AS UNSIGNED) ASC";
+							String sql = "SELECT `day` FROM `staff-arrange` WHERE `name` ='"+session.getAttribute("name")+"' and `month`="+(now.get(Calendar.MONTH)+2)+" and `user` ='"+session.getAttribute("user")+"'ORDER BY CAST(`staff-arrange`.`day` AS UNSIGNED) ASC";
 							jar =a.getData(sql);
 							if(!jar.isEmpty()){
 								for(int i = 0; i < jar.length(); i++){
@@ -189,7 +189,7 @@
 								ArrayList<String> workerChoose2 = new ArrayList<String>();
 								ArrayList<String> worker3 = new ArrayList<String>();
 								ArrayList<String> workerChoose3 = new ArrayList<String>();
-								JSONArray morningWorker = a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'morning'");
+								JSONArray morningWorker = a.getData("SELECT `user`,`name` FROM `staff-account` WHERE `workTime` = 'morning'");
 								for(int i=1; i<=daysInMonth; i++){
 							%>
 							<h6><%=i%>(選擇人員：<span>
@@ -200,7 +200,7 @@
 										for(int j=0; j<morningWorker.length(); j++){
 											JSONObject obj = morningWorker.getJSONObject(j);
 								%>
-									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
+									<option value="<%=obj.get("name")+"("+obj.get("user")+")"+i%>"><%=obj.get("name")+"("+obj.get("user")+")"%></option>
 									<%
 										}
 									}
@@ -208,27 +208,27 @@
 								</select>
 							</span>）</h6>
 								<%
-									JSONArray c = a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'morning'");
-									JSONArray decidePeople = a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'morning'");
+									JSONArray c = a.getData("SELECT `user`,`name` FROM `staff-arrange` WHERE `day` ='" + i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'morning'");
+									JSONArray decidePeople = a.getData("SELECT `user`,`name` FROM `staff-worktime` WHERE `day` ='" + i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'morning'");
 									String adviceMor = "";
 									String unadviceMor = "";
 									String decideMor = "";
 									if(!c.isEmpty()){
 										for(int j=0; j<c.length(); j++){
 											JSONObject obj = c.getJSONObject(j);
-											workerChoose.add(obj.get("user").toString());//這一天有誰可以工作
+											workerChoose.add(obj.get("name").toString()+"("+obj.get("user")+")");//這一天有誰可以工作
 										}
 									}
 									if(!decidePeople.isEmpty()){
-										for(int j=0; j<1; j++){
+										for(int j=0; j<decidePeople.length(); j++){
 											JSONObject obj = decidePeople.getJSONObject(j);
-											decideMor += obj.get("user");
+											decideMor += obj.get("name")+"("+obj.get("user")+")";
 										}
 									}
 									if(!morningWorker.isEmpty()){
 										for(int j=0; j<morningWorker.length(); j++){
 											JSONObject obj = morningWorker.getJSONObject(j);
-											worker.add(obj.get("name").toString());//工作時間是早上的人
+											worker.add(obj.get("name").toString()+"("+obj.get("user")+")");//工作時間是早上的人
 										}
 									}
 									if(workerChoose.size() != 0){
@@ -247,18 +247,11 @@
 									for(int j=0; j<worker.size(); j++){
 										unadviceMor += worker.get(j)+"、";
 									}
-									if(adviceMor.length() >0){
-									adviceMor = adviceMor.substring(0, adviceMor.length()-1);
-									}
-									if(unadviceMor.length()>0){
-									unadviceMor = unadviceMor.substring(0, unadviceMor.length()-1);
-									}
-									if(adviceMor.equals("")){
-										adviceMor = "無";
-									}
-									if(decideMor.equals("")){
-										decideMor = "無";
-									}
+									adviceMor = adviceMor.length() > 0 ? adviceMor.substring(0, adviceMor.length() - 1) : adviceMor;
+									unadviceMor = unadviceMor.length() > 0 ? unadviceMor.substring(0, unadviceMor.length() - 1) : unadviceMor;
+									adviceMor = adviceMor.equals("") ? "無" : adviceMor;
+									decideMor = decideMor.equals("") ? "無" : decideMor;
+									unadviceMor = unadviceMor.equals("") ? "無" : unadviceMor;
 									workerChoose.clear();
 									worker.clear();
 								%>
@@ -278,8 +271,7 @@
 						<div class="col">
 							<h5>8:00 a.m. ~4:00 p.m.(2人/天)</h5>
 							<%
-								JSONArray noonWorker =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'noon'");
-								JSONArray noonWorker2 =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'noon2'");
+								JSONArray noonWorker =a.getData("SELECT `user`,`name` FROM `staff-account` WHERE `workTime` = 'noon'");
 								for(int i=1; i<=daysInMonth; i++){
 							%>
 							<h6><%=i%>(選擇人員：<span>
@@ -290,7 +282,7 @@
 										for(int j=0; j<noonWorker.length(); j++){
 											JSONObject obj = noonWorker.getJSONObject(j);
 								%>
-									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
+									<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
 									<%
 										}
 									}
@@ -299,11 +291,11 @@
 								<select id="twoWorkTimeNoon<%=i%>">
 									<option value=""></option>
 								<%
-									if(!noonWorker2.isEmpty()){
-										for(int j=0; j<noonWorker2.length(); j++){
+									if(!noonWorker.isEmpty()){
+										for(int j=0; j<noonWorker.length(); j++){
 											JSONObject obj = noonWorker.getJSONObject(j);
 								%>
-									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
+									<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"+i%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
 									<%
 										}
 									}
@@ -311,34 +303,27 @@
 								</select>
 							</span>)</h6>
 								<%
-									JSONArray d =a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'noon'");
-									JSONArray decidePeople2 =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'noon'");
-									JSONArray decidePeople3 =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'noon2'");
+									JSONArray d =a.getData("SELECT `user`,`name` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'noon'");
+									JSONArray decidePeople2 =a.getData("SELECT `user`,`name` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'noon'");
 									String decideNoo = "";
 									String adviceNoo = "";
 									String unadviceNoo = "";
 									if(!d.isEmpty()){
 										for(int j=0; j<d.length(); j++){
 											JSONObject obj = d.getJSONObject(j);
-											workerChoose2.add(obj.get("user").toString());//這一天有誰可以工作
+											workerChoose2.add(obj.get("name").toString()+"("+obj.get("user")+")");//這一天有誰可以工作
 										}
 									}
 									if(!decidePeople2.isEmpty()){
-										for(int j=0; j<1; j++){
+										for(int j=0; j<decidePeople2.length(); j++){
 											JSONObject obj = decidePeople2.getJSONObject(j);
-											decideNoo += obj.get("user")+"、";
-										}
-									}
-									if(!decidePeople3.isEmpty()){
-										for(int j=0; j<1; j++){
-											JSONObject obj = decidePeople2.getJSONObject(j);
-											decideNoo += obj.get("user")+"、";
+											decideNoo += obj.get("name").toString()+"("+obj.get("user")+")"+"、";
 										}
 									}
 									if(!noonWorker.isEmpty()){
 										for(int j=0; j<noonWorker.length(); j++){
 											JSONObject obj = noonWorker.getJSONObject(j);
-											worker2.add(obj.get("name").toString());//工作時間是早上的人
+											worker2.add(obj.get("name").toString()+"("+obj.get("user")+")");//工作時間是早上的人
 										}
 									}
 									if(workerChoose2.size() != 0){				
@@ -357,21 +342,12 @@
 									for(int j=0; j<worker2.size(); j++){
 										unadviceNoo += worker2.get(j)+"、";
 									}
-									if(adviceNoo.length() >0){
-										adviceNoo = adviceNoo.substring(0, adviceNoo.length()-1);
-									}
-									if(unadviceNoo.length()>0){
-										unadviceNoo = unadviceNoo.substring(0, unadviceNoo.length()-1);
-									}
-									if(decideNoo.length() >0){
-										decideNoo = decideNoo.substring(0, decideNoo.length()-1);
-									}
-									if(adviceNoo.equals("")){
-										adviceNoo = "無";
-									}
-									if(decideNoo.equals("")){
-										decideNoo = "無";
-									}
+									adviceNoo = adviceNoo.length() > 0 ? adviceNoo.substring(0, adviceNoo.length() - 1) : adviceNoo;
+									unadviceNoo = unadviceNoo.length() > 0 ? unadviceNoo.substring(0, unadviceNoo.length() - 1) : unadviceNoo;
+									decideNoo = decideNoo.length() > 0 ? decideNoo.substring(0, decideNoo.length() - 1) : decideNoo;
+									adviceNoo = adviceNoo.equals("") ? "無" : adviceNoo;
+									decideNoo = decideNoo.equals("") ? "無" : decideNoo;
+									unadviceNoo = unadviceNoo.equals("") ? "無" : unadviceNoo;
 									workerChoose2.clear();
 									worker2.clear();
 								%>
@@ -391,8 +367,7 @@
 						<div class="col">
 							<h5>4:00 p.m. ~12:00 a.m.(2人/天)</h5>
 							<%
-								JSONArray nightWorker =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'night'");
-								JSONArray nightWorker2 =a.getData("SELECT `name` FROM `staff-account` WHERE `workTime` = 'night2'");
+								JSONArray nightWorker =a.getData("SELECT `user`,`name` FROM `staff-account` WHERE `workTime` = 'night'");
 								for(int i=1; i<=daysInMonth; i++){
 							%>
 							<h6><%=i%>(選擇人員：<span>
@@ -403,7 +378,7 @@
 										for(int j=0; j<nightWorker.length(); j++){
 											JSONObject obj = nightWorker.getJSONObject(j);
 								%>
-									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
+									<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
 									<%
 										}
 									}
@@ -412,11 +387,11 @@
 								<select id="twoWorkTimeNight<%=i%>">
 									<option value=""></option>
 								<%
-									if(!nightWorker2.isEmpty()){
-										for(int j=0; j<nightWorker2.length(); j++){
-											JSONObject obj = nightWorker2.getJSONObject(j);
+									if(!nightWorker.isEmpty()){
+										for(int j=0; j<nightWorker.length(); j++){
+											JSONObject obj = nightWorker.getJSONObject(j);
 								%>
-									<option value="<%=obj.get("name")%>"><%=obj.get("name")%></option>
+									<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"+i%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
 									<%
 										}
 									}
@@ -424,34 +399,27 @@
 								</select>
 							</span>)</h6>
 								<%
-									JSONArray e =a.getData("SELECT `user` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'night'");
-									JSONArray decidePeople4 =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'night'");
-									JSONArray decidePeople5 =a.getData("SELECT `user` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+1)+"' AND `orderWork` = 'night2'");
+									JSONArray e =a.getData("SELECT `user`,`name` FROM `staff-arrange` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'night'");
+									JSONArray decidePeople4 =a.getData("SELECT `user`,`name` FROM `staff-worktime` WHERE `day` ='" +i+ "' AND `year` ='"+now.get(Calendar.YEAR)+"' AND `month` ='"+(now.get(Calendar.MONTH)+2)+"' AND `orderWork` = 'night'");
 									String adviceNig = "";
 									String unadviceNig = "";
 									String decideNig = "";
 									if(!e.isEmpty()){
 										for(int j=0; j<e.length(); j++){
 											JSONObject obj = e.getJSONObject(j);
-											workerChoose3.add(obj.get("user").toString());//這一天有誰可以工作
+											workerChoose3.add(obj.get("name").toString()+"("+obj.get("user")+")");//這一天有誰可以工作
 										}
 									}
 									if(!decidePeople4.isEmpty()){
-										for(int j=0; j<1; j++){
+										for(int j=0; j<decidePeople4.length(); j++){
 											JSONObject obj = decidePeople4.getJSONObject(j);
-											decideNig += obj.get("user")+"、";
-										}
-									}
-									if(!decidePeople5.isEmpty()){
-										for(int j=0; j<1; j++){
-											JSONObject obj = decidePeople5.getJSONObject(j);
-											decideNig += obj.get("user")+"、";
+											decideNig += obj.get("name").toString()+"("+obj.get("user")+")"+"、";
 										}
 									}
 									if(!nightWorker.isEmpty()){
 										for(int j=0; j<nightWorker.length(); j++){
 											JSONObject obj = nightWorker.getJSONObject(j);
-											worker3.add(obj.get("name").toString());//工作時間是早上的人
+											worker3.add(obj.get("name").toString()+"("+obj.get("user")+")");//工作時間是早上的人
 										}
 									}
 									if(workerChoose3.size() != 0){				
@@ -470,21 +438,14 @@
 									for(int j=0; j<worker3.size(); j++){
 										unadviceNig += worker3.get(j)+"、";
 									}
-									if(adviceNig.length() >0){
-										adviceNig = adviceNig.substring(0, adviceNig.length()-1);
-									}
-									if(unadviceNig.length()>0){
-										unadviceNig = unadviceNig.substring(0, unadviceNig.length()-1);
-									}
-									if(decideNig.length() >0){
-										decideNig = decideNig.substring(0, decideNig.length()-1);
-									}
-									if(adviceNig.equals("")){
-										adviceNig = "無";
-									}
-									if(decideNig.equals("")){
-										decideNig = "無";
-									}
+									
+									adviceNig = adviceNig.length() > 0 ? adviceNig.substring(0, adviceNig.length() - 1) : adviceNig;
+									unadviceNig = unadviceNig.length() > 0 ? unadviceNig.substring(0, unadviceNig.length() - 1) : unadviceNig;
+									decideNig = decideNig.length() > 0 ? decideNig.substring(0, decideNig.length() - 1) : decideNig;
+									adviceNig = adviceNig.equals("") ? "無" : adviceNig;
+									decideNig = decideNig.equals("") ? "無" : decideNig;
+									unadviceNig = unadviceNig.equals("") ? "無" : unadviceNig;
+									
 									workerChoose3.clear();
 									worker3.clear();
 								%>
@@ -503,7 +464,7 @@
 							%>
 						</div>
 					</div>
-					<input type="button" id="bossArrange" onclick="bossArrange()" value="送出"></input>
+					<input type="button" id="bossArrange" onclick="bossArrange()" value="送出" hidden></input>
 					<canvas class="my-4 chartjs-render-monitor" id="myChart" width="866" height="365" style="display: block; width: 866px; height: 365px;"></canvas>
 				</main>
 			</div>
@@ -523,27 +484,30 @@
 	var my_year = my_date.getFullYear();
 	var my_month = my_date.getMonth();
 	var my_day = my_date.getDate();
+	
 	function dayStart(month, year) {
 		var tmpDate = new Date(year, month, 1);
 		return (tmpDate.getDay());
 	}
+	
 	function daysMonth(month, year) {
 		var tmp = year % 4;
-		if (tmp == 0) {
+		if (tmp === 0) {
 			return (month_olympic[month]);
 		} else {
 			return (month_normal[month]);
 		}
 	}
+	
 	function refreshDate(){
 		var str = "";
 		var totalDay = daysMonth(my_month, my_year); 
 		var firstDay = dayStart(my_month, my_year); 
 		var myclass;
-		for(var i=1; i<firstDay; i++){ 
+		for(var i=1 ; i< firstDay; i++){ 
 			str += "<li id=></li>"; 
 		}
-		for(var i=1; i<=totalDay; i++){
+		for(var i=1 ; i<= totalDay; i++){
 			str += "<li id="+my_year+"_"+(my_month+1)+"_"+i+">"+i+"</li>";
 		}
 		holder.innerHTML = str; 
@@ -555,31 +519,35 @@
 			async: false,
 			data: {
 				"getWorkTime"		: "true",
-				"user"  : getCookie('user'),
+				"name"  : getCookie('name'),
 				"month"	: my_month,
 				"year"	: my_year,
 			},
 		}).done(function (data){
-			for(var i=0;i<data.split("、").length-1;i++){
+			for(var i= 0; i< data.split("、").length-1; i++){
 				$("#"+my_year+"_"+(my_month+1)+"_"+data.split("、")[i])[0].className += "green-small";
 			}
 		});
 	}
+	
 	function calendar(){
 		$("#main1").attr('hidden',false);
 		$("#main2").attr('hidden',true);
 		$("#main3").attr('hidden',true);
 	}
+	
 	function calendarAll(){
 		$("#main1").attr('hidden',true);
 		$("#main2").attr('hidden',false);
 		$("#main3").attr('hidden',true);
 	}
+	
 	function calendarSet(){
 		$("#main1").attr('hidden',true);
 		$("#main2").attr('hidden',true);
 		$("#main3").attr('hidden',false);
 	}
+	
 	/*prev.onclick = function(e){
 		e.preventDefault();
 		my_month--;
@@ -638,19 +606,19 @@
 	
 	$("#logOut").click(function(){
 		deleteCookie('identity');
+		deleteCookie('name');
 		deleteCookie('user');
-		$(location).attr('href','http://localhost:8080/store/login.jsp')
+		$(location).attr('href','http://localhost:8080/storebackup/login.jsp')
 	})
-	
 	
 	function arrangeSubmit(){
 		var day = [];
-		for(var i=0 ; i<$("input[id*='arrange']").length; i++){
+		for(var i= 0; i< $("input[id*='arrange']").length; i++){
 			if($("input[id*='arrange']")[i].checked === true){
 				day.push(i+1);
 			}
 		}
-		for(var i=0; i<$("input[id*='edit']").length; i++){
+		for(var i= 0; i< $("input[id*='edit']").length; i++){
 			for(var j=0; j<day.length;j++){
 				if(day[j] == $("input[id*='edit']")[i].nextSibling.data.trim()){
 					day.splice(j, 1);
@@ -664,19 +632,20 @@
 			async: false,
 			data: {
 				"arrange"		: "true",
-				"user"  : getCookie('user'),
+				"name"  : getCookie('name'),
+				"user"	: getCookie('user'),
 				"day"	: day,
 				"month"	: my_month,
 				"year"	: my_year,
 			},
 		}).done(function(){
-			window.location = "http://localhost:8080/store/lobby.jsp";
+			window.location = "http://localhost:8080/storebackup/lobby.jsp";
 		});
 	}
 	
 	function arrangeDelete(){
 		var day = [];
-		for(var i=0 ; i<$("input[id*='edit']").length; i++){
+		for(var i= 0; i< $("input[id*='edit']").length; i++){
 			if($("input[id*='edit']")[i].checked === true){
 				day.push($("input[id*='edit']")[i].nextSibling.data.trim());
 			}
@@ -691,14 +660,14 @@
 				"day"	: day,
 			},
 		}).done(function(){
-			window.location = "http://localhost:8080/store/lobby.jsp";
+			window.location = "http://localhost:8080/storebackup/lobby.jsp";
 		});
 	}
 	
 	function bossArrange(){
 		var noonAir = "";
 		var nightAir = "";
-		for(var i=0; i<$("select[id*='workTimeNoon']").length; i++){
+		for(var i= 0; i<$("select[id*='workTimeNoon']").length; i++){
 			if(($("select[id*='workTimeNoon']")[i].value === "" && $("select[id*='twoWorkTimeNoon']")[i].value !== "") || ($("select[id*='workTimeNoon']")[i].value !== "" && $("select[id*='twoWorkTimeNoon']")[i].value === "") || ($("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value && $("select[id*='twoWorkTimeNoon']")[i].value !== "")){
 				noonAir += (i+1)+"、";
 			}
@@ -706,17 +675,18 @@
 				nightAir += (i+1)+"、";
 			}
 		}
-		if(noonAir.length >0 || nightAir.length >0){
+		if(noonAir.length > 0 || nightAir.length > 0){
 			noonAir = noonAir.substring(0, noonAir.length-1);
 			nightAir = nightAir.substring(0, nightAir.length-1);
 			alert("午班："+noonAir+" 以及 晚班："+nightAir+" 有少派人 或者 重複指派人");
 		}else{
-			var user = [];
+			var name = [];
 			for(var i=0; i<$("select[id*='workTimeMorning']").length; i++){
 				if($("select[id*='workTimeMorning']")[i].value === ""){
-					user.push("無");
+					name.push("無");
 				}else{
-					user.push($("select[id*='workTimeMorning']")[i].value);
+					var value = $("select[id*='workTimeMorning']")[i].value;
+					name.push(value);
 				}
 			}
 			$.ajax({
@@ -725,18 +695,19 @@
 				async: false,
 				data: {
 					"decide"		: "true",
-					"user"  : user,
+					"name"  : name,
 					"year"	:my_year,
 					"month"	:my_month,
 					"orderWork"	: "morning",
 				},
 			});
-			user = [];
+			name = [];
 			for(var i=0; i<$("select[id*='workTimeNoon']").length; i++){
-				if($("select[id*='workTimeNoon']")[i].value === ""){
-					user.push("無");
+				if($("select[id*='twoWorkTimeNoon']")[i].value === "" || $("select[id*='workTimeNoon']")[i].value === ""){
+					name.push("無");
 				}else{
-					user.push($("select[id*='workTimeNoon']")[i].value);
+					name.push($("select[id*='workTimeNoon']")[i].value+$("select[id*='twoWorkTimeNoon']")[i].value);
+					console.log($("select[id*='workTimeNoon']")[i].value+$("select[id*='twoWorkTimeNoon']")[i].value);
 				}
 			}
 			$.ajax({
@@ -745,73 +716,34 @@
 				async: false,
 				data: {
 					"decide"		: "true",
-					"user"  : user,
+					"name"  : name,
 					"year"	: my_year,
 					"month"	: my_month,
 					"orderWork"	: "noon",
 				},
 			});
-			user = [];
-			for(var i=0; i<$("select[id*='twoWorkTimeNoon']").length; i++){
-				if($("select[id*='twoWorkTimeNoon']")[i].value === "" || $("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value){
-					user.push("無");
-				}else{
-					user.push($("select[id*='twoWorkTimeNoon']")[i].value);
-				}
-			}
-			$.ajax({
-				url: 'api/store/sWork.jsp',
-				type: 'POST',
-				async: false,
-				data: {
-					"decide"		: "true",
-					"user"  : user,
-					"year"	: my_year,
-					"month"	: my_month,
-					"orderWork"	: "noon2",
-				},
-			});
-			user = [];
+			name = [];
 			for(var i=0; i<$("select[id*='workTimeNight']").length; i++){
-				if($("select[id*='workTimeNight']")[i].value === ""){
-					user.push("無");
+				if($("select[id*='twoWorkTimeNight']")[i].value === "" || $("select[id*='workTimeNight']")[i].value === ""){
+					name.push("無");
 				}else{
-					user.push($("select[id*='workTimeNight']")[i].value);
+					name.push($("select[id*='workTimeNight']")[i].value+$("select[id*='twoWorkTimeNight']")[i].value);
 				}
 			}
+
 			$.ajax({
 				url: 'api/store/sWork.jsp',
 				type: 'POST',
 				async: false,
 				data: {
 					"decide"		: "true",
-					"user"  : user,
+					"name"  : name,
 					"year"	: my_year,
 					"month"	: my_month,
 					"orderWork"	: "night",
 				},
-			});
-			user = [];
-			for(var i=0; i<$("select[id*='twoWorkTimeNight']").length; i++){
-				if($("select[id*='twoWorkTimeNight']")[i].value === "" || $("select[id*='workTimeNight']")[i].value === $("select[id*='twoWorkTimeNight']")[i].value){
-					user.push("無");
-				}else{
-					user.push($("select[id*='twoWorkTimeNight']")[i].value);
-				}
-			}
-			$.ajax({
-				url: 'api/store/sWork.jsp',
-				type: 'POST',
-				async: false,
-				data: {
-					"decide"		: "true",
-					"user"  : user,
-					"year"	: my_year,
-					"month"	: my_month,
-					"orderWork"	: "night2",
-				},
 			}).done(function(){
-				window.location = "http://localhost:8080/store/lobby.jsp";
+				window.location = "http://localhost:8080/storebackup/lobby.jsp";
 			});
 		}
 	}
@@ -826,7 +758,7 @@
 			$("#div5").attr('hidden', false);
 			$("#div6").attr('hidden', false);
 			$("#limitTime").attr('hidden', true);
-			calendarAll();
+			$("#bossArrange").attr('hidden', false);
 			$.ajax({
 				url: 'api/store/sWork.jsp',
 				type: 'POST',
@@ -843,9 +775,9 @@
 				for(var i in JSON.parse(data)){
 					if(i.split("_")[0].includes("morning")){
 						$("#morningTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
-					}else if(i.split("_")[0].includes("noon2")){
+					}else if(i.split("_")[0].includes("noon")){
 						$("#noonTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
-					}else if(i.split("_")[0].includes("night2")){
+					}else if(i.split("_")[0].includes("night")){
 						$("#nightTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
 					}
 				}
@@ -858,10 +790,9 @@
 			$("#div4").attr('hidden', false);
 			$("#div5").attr('hidden', true);
 			$("#div6").attr('hidden', true);
-			calendar();
 		}
 		$("#limitTime").text("開放時間："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
-		$("#user").text(getCookie('user'));
+		$("#name").text(getCookie('name'));
 
 		if((my_day < (daysMonth(my_month, my_year)-25) || my_day > (daysMonth(my_month, my_year)-1) )&& getCookie('identity') === "staff"){
 			$("#calendarSet").attr('hidden',true);
@@ -869,6 +800,7 @@
 		}else if((daysMonth(my_month, my_year)-6) <= my_day <= (daysMonth(my_month, my_year)-1) && getCookie('identity') === "staff"){
 			$("#calendarSet").attr('hidden',false);
 		}
+		calendarAll();
 		refreshDate();
 	})
 	

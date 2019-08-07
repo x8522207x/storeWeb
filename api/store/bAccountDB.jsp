@@ -10,8 +10,8 @@ String account	= request.getParameter("account");
 String register = (request.getParameter("register") == null)? "" :request.getParameter("register");
 String check = (request.getParameter("check") == null)? "" :request.getParameter("check");
 String bLogIn = (request.getParameter("bLogIn") == null)? "" :request.getParameter("bLogIn");
-a.connection();
 boolean result = true;
+a.connection();
 if(register.equals("true")){
 	String password	= request.getParameter("password");
 	String email	= request.getParameter("email");
@@ -19,10 +19,8 @@ if(register.equals("true")){
 	if(account != null){
 		a.executeSQLUpdate("INSERT INTO `boss-account`( `account`, `password`, `email`, `name`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"')");
 	}
-	a.closeConnection();
 }else if(check.equals("true")){
-	jar = a.getData("SELECT  `account` FROM `boss-account`");
-	a.closeConnection();
+	jar = a.getData("SELECT `account` FROM `boss-account`");
 	if(!jar.isEmpty()){
 		for(int i=0;i<jar.length();i++){
 			JSONObject obj = jar.getJSONObject(i);
@@ -42,15 +40,15 @@ if(register.equals("true")){
 	}
 }else if(bLogIn.equals("true")){
 	String password	= request.getParameter("password");
-	jar = a.getData("SELECT  `account`,`password`,`name` FROM `boss-account`");
-	a.closeConnection();
+	jar = a.getData("SELECT `user`,`account`,`password`,`name` FROM `boss-account`");
 	boolean alive = false;
 	if(!jar.isEmpty()){
 		for(int i=0;i<jar.length();i++){
 			JSONObject obj = jar.getJSONObject(i);
 			if(account.equals(obj.get("account"))){
 				if(password.equals(obj.get("password"))){
-					String userInfo = "true;"+obj.get("name");
+					String userInfo = "true;"+obj.get("name")+";"+obj.get("user");
+					session.setAttribute( "user", obj.get("user"));
 					response.getWriter().print(userInfo);
 					alive = true;
 					break;
@@ -68,5 +66,5 @@ if(register.equals("true")){
 		response.getWriter().print("afalse");
 	}
 }
-
+a.closeConnection();
 %>
