@@ -11,7 +11,7 @@
 		  <input type="text" id="ip-name" name="name" class="form-control" placeholder="">
 		  <span class="danger" id="ipn" style="color:red;">請輸入姓名</span>
 		  <br>
-		  <label for="inputStudentNumber" class="margin-top-20">帳號</label>
+		  <label for="inputStaffNumber" class="margin-top-20">帳號</label>
 		  <input type="text" id="ip-account" name="account" class="form-control" placeholder="">
 		  <span class="danger" id="ipa" style="color:red;">請輸入帳號(7個字元以上)</span>
 		  <button type="button" id="bc" disabled>檢查重複</button>
@@ -109,7 +109,7 @@
 				},
 			});
 			alert("恭喜註冊成功!即將跳回登入頁");
-			window.location = "http://localhost:8080/store/login.jsp";
+			window.location = "http://localhost:8080/storebackup/login.jsp";
 		}
 	}
 	
