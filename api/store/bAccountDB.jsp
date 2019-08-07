@@ -21,7 +21,7 @@ if(register.equals("true")){
 	}
 	a.closeConnection();
 }else if(check.equals("true")){
-	jar = a.getData("SELECT  `account` FROM `boss-account`");
+	jar = a.getData("SELECT `account` FROM `boss-account`");
 	a.closeConnection();
 	if(!jar.isEmpty()){
 		for(int i=0;i<jar.length();i++){
@@ -42,7 +42,7 @@ if(register.equals("true")){
 	}
 }else if(bLogIn.equals("true")){
 	String password	= request.getParameter("password");
-	jar = a.getData("SELECT  `account`,`password`,`name` FROM `boss-account`");
+	jar = a.getData("SELECT `user`,`account`,`password`,`name` FROM `boss-account`");
 	a.closeConnection();
 	boolean alive = false;
 	if(!jar.isEmpty()){
@@ -50,7 +50,8 @@ if(register.equals("true")){
 			JSONObject obj = jar.getJSONObject(i);
 			if(account.equals(obj.get("account"))){
 				if(password.equals(obj.get("password"))){
-					String userInfo = "true;"+obj.get("name");
+					String userInfo = "true;"+obj.get("name")+";"+obj.get("user");
+					session.setAttribute( "user", obj.get("user"));
 					response.getWriter().print(userInfo);
 					alive = true;
 					break;

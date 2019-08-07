@@ -19,9 +19,6 @@ if(register.equals("true")){
 	String workTime	= request.getParameter("workTime");		
 	if(account != null ){
 		a.executeSQLUpdate("INSERT INTO `staff-account`( `account`, `password`, `email`, `name`, `workTime`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+workTime+"')");
-		if(workTime.equals("noon")||workTime.equals("night")){
-			a.executeSQLUpdate("INSERT INTO `staff-account`( `account`, `password`, `email`, `name`, `workTime`) VALUES ('"+account+"','"+password+"','"+email+"','"+name+"','"+workTime+"2')");
-		}
 	}
 }else if(check.equals("true")){
 	jar = a.getData("SELECT `account` FROM `staff-account`");
@@ -44,16 +41,17 @@ if(register.equals("true")){
 	}
 }else if(sLogIn.equals("true")){
 	String password	= request.getParameter("password");
-	jar = a.getData("SELECT  `account`,`password`,`name` FROM `staff-account`");
+	jar = a.getData("SELECT `user`,`account`,`password`,`name` FROM `staff-account`");
 	boolean alive = false;
 	if(!jar.isEmpty()) {
 		for(int i=0;i<jar.length();i++) {
 			JSONObject obj = jar.getJSONObject(i);	
 			if(account.equals(obj.get("account"))){
 				if(password.equals(obj.get("password"))){
-					String userInfo = "true;"+obj.get("name");
+					String userInfo = "true;"+obj.get("name")+";"+obj.get("user");
 					response.getWriter().print(userInfo);
-					session.setAttribute( "user", obj.get("name"));
+					session.setAttribute( "name", obj.get("name"));
+					session.setAttribute( "user", obj.get("user"));
 					alive = true;
 					break;
 				}else{
