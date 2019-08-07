@@ -1,6 +1,6 @@
 <%@ page language="java" pageEncoding="utf-8" contentType="text/html; charset=utf-8" %>
 <html lang="zh-TW">
-	<jsp:include page='assets/head.jsp'></jsp:include>
+	<jsp:include page='includes/head.jsp'></jsp:include>
 	<body>
 	  <div class="container">
 		<h2 class="form-signin-heading text-center" style="color:#ff9933;background:#000;display:block;">超商店員排班系統</h2>

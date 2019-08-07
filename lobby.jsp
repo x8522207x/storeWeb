@@ -5,7 +5,7 @@
 <%@ page import ="java.util.*"%>
 <%@ page import ="java.time.YearMonth"%>
 <html lang="zh-TW">
-	<jsp:include page='assets/head.jsp'></jsp:include>
+	<jsp:include page='includes/head.jsp'></jsp:include>
 	<script>
 		var user = getCookie('user');
 		var identity = getCookie('identity');

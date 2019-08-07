@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <html lang="zh-TW">
-	<jsp:include page='assets/head.jsp'></jsp:include>
+	<jsp:include page='includes/head.jsp'></jsp:include>
 	<body>
 	  <div class="container">
 		<form class="register-form" role="form"  method="POST" id="form1">
