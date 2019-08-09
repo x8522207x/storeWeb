@@ -24,7 +24,7 @@ if(arrange.equals("true")){
 		sql = "SELECT `workTime` FROM `staff-account` WHERE `name`= '"+name+"'";
 		jar = a.getData(sql);
 		if(!jar.isEmpty()){
-			for(int i=0 ; i< day.length ;i++){
+			for(int i= 0 ; i< day.length ;i++){
 				JSONObject obj = jar.getJSONObject(0);
 				sql = "INSERT INTO `staff-arrange`( `user`,`name`, `year`, `month`, `day`, `orderWork`) VALUES ('"+user+"','"+name+"','"+year+"','"+(Integer.parseInt(month)+2)+"','"+day[i]+"','"+obj.get("workTime")+"')";
 				a.executeSQLUpdate(sql);
@@ -35,7 +35,7 @@ if(arrange.equals("true")){
 	String user = request.getParameter("user");
 	String[] day = request.getParameterValues("day[]");
 	if(day != null ){
-		for(int i =0; i< day.length ; i++){
+		for(int i= 0; i< day.length ; i++){
 			sql = "DELETE FROM `staff-arrange` WHERE `day` = '"+day[i]+"' AND `user` ='"+user+"'";
 			a.executeSQLUpdate(sql);
 		}
@@ -44,7 +44,7 @@ if(arrange.equals("true")){
 	String[] name = request.getParameterValues("name[]");
 	String orderWork = request.getParameter("orderWork");
 	if(name != null ){
-		for(int i=0 ; i< name.length ;i++){
+		for(int i= 0 ; i< name.length ;i++){
 			if(!name[i].equals("無")){
 				String day = name[i].substring(name[i].lastIndexOf(")")+1,name[i].length());
 				String user = name[i].substring(name[i].indexOf("(")+1, name[i].indexOf(")"));
@@ -64,7 +64,7 @@ if(arrange.equals("true")){
 	sql = "SELECT `day` FROM `staff-worktime` WHERE `name`='"+name+"' AND `year` ='"+year+"' AND `month` ='"+(Integer.parseInt(month)+1)+"' ORDER BY CAST(`staff-worktime`.`day` AS UNSIGNED) ASC";
 	jar = a.getData(sql);
 	if(!jar.isEmpty()){
-		for(int i=0 ; i< jar.length() ;i++){
+		for(int i= 0 ; i< jar.length() ;i++){
 			JSONObject obj = jar.getJSONObject(i);
 			day += obj.get("day") + "、";
 		}
@@ -77,7 +77,7 @@ if(arrange.equals("true")){
 	JSONObject jsonO = new JSONObject();
 	Set<String> setName = new LinkedHashSet<>(); 
 	if(!name.isEmpty() ){
-		for(int i=0 ; i< name.length() ;i++){
+		for(int i= 0 ; i< name.length() ;i++){
 			JSONObject obj = name.getJSONObject(i);
 			nameAL.add(obj.get("workTime")+"_"+obj.get("name")+"("+obj.get("user")+")");
 		}
@@ -85,14 +85,14 @@ if(arrange.equals("true")){
 	setName.addAll(nameAL); 
 	nameAL.clear(); 
 	nameAL.addAll(setName);
-	for(int i=0 ;i<nameAL.size();i++){
+	for(int i= 0 ;i<nameAL.size();i++){
 		String day = "";
 		String user = nameAL.get(i).split("_")[1].substring(nameAL.get(i).split("_")[1].indexOf("(")+1, nameAL.get(i).split("_")[1].indexOf(")"));
 		String nameSql = nameAL.get(i).split("_")[1].substring(0, nameAL.get(i).split("_")[1].indexOf("("));
 		sql = "SELECT `day` FROM `staff-worktime` WHERE `user`='"+user+"' and `name`='"+nameSql+"' AND `year` ='"+year+"' AND `month` ='"+(Integer.parseInt(month)+2)+"' ORDER BY CAST(`staff-worktime`.`day` AS UNSIGNED) ASC";
 		jar = a.getData(sql);
 		if(!jar.isEmpty()){
-			for(int j=0 ; j< jar.length() ;j++){
+			for(int j= 0 ; j< jar.length() ;j++){
 				JSONObject obj = jar.getJSONObject(j);
 				day += obj.get("day") + "、";
 			}
