@@ -37,7 +37,6 @@ if(arrange.equals("true")){
 	if(day != null ){
 		for(String i : day){
 			sql = "DELETE FROM `staff-arrange` WHERE `day` = '"+i+"' AND `user` ='"+user+"'";
-			System.out.println(sql);
 			a.executeSQLUpdate(sql);
 		}
 	}
