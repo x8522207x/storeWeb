@@ -612,15 +612,17 @@
 		function arrangeSubmit(){
 			var day = [];
 			for(let i in $("input[id*='arrange']")){
-				if($("input[id*='arrange']")[i].checked === true){
-					day.push(i+1);
+				if($("input[id*='arrange']")[i] && $("input[id*='arrange']")[i].checked === true){
+					day.push(Number(i)+1);
 				}
 			}
 			for(let i in $("input[id*='edit']")){
-				for(let j in day){
-					if(day[j] == $("input[id*='edit']")[i].nextSibling.data.trim()){
-						day.splice(j, 1);
-						break;
+				if($("input[id*='edit']")[i]){
+					for(let j = 0; j < day; j++){
+						if(day[j] === Number($("input[id*='edit']")[i].nextSibling.data.trim())){
+							day.splice(j, 1);
+							break;
+						}
 					}
 				}
 			}
@@ -644,7 +646,7 @@
 		function arrangeDelete(){
 			var day = [];
 			for(let i in $("input[id*='edit']")){
-				if($("input[id*='edit']")[i].checked === true){
+				if($("input[id*='edit']")[i] && $("input[id*='edit']")[i].checked === true){
 					day.push($("input[id*='edit']")[i].nextSibling.data.trim());
 				}
 			}
@@ -665,7 +667,7 @@
 		document.getElementById('bossArrange').addEventListener('click', function bossArrange(e){
 			var noonAir = "";
 			var nightAir = "";
-			for(let i = 0; i < $("select[id*='workTimeNoon']").length; i++){
+			for(let i in $("select[id*='workTimeNoon']")){
 				if(($("select[id*='workTimeNoon']")[i].value === "" && $("select[id*='twoWorkTimeNoon']")[i].value !== "") || ($("select[id*='workTimeNoon']")[i].value !== "" && $("select[id*='twoWorkTimeNoon']")[i].value === "") || ($("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value && $("select[id*='twoWorkTimeNoon']")[i].value !== "")){
 					noonAir += (i+1)+"、";
 				}
@@ -700,7 +702,7 @@
 					},
 				});
 				name = [];
-				for(let i = 0; i < $("select[id*='workTimeNoon']").length; i++){
+				for(let i in $("select[id*='workTimeNoon']")){
 					if($("select[id*='twoWorkTimeNoon']")[i].value === "" || $("select[id*='workTimeNoon']")[i].value === ""){
 						name.push(new String("無"));
 					}else{
@@ -721,7 +723,7 @@
 					},
 				});
 				name = [];
-				for(let i = 0; i < $("select[id*='workTimeNight']").length; i++){
+				for(let i in $("select[id*='workTimeNight']")){
 					if($("select[id*='twoWorkTimeNight']")[i].value === "" || $("select[id*='workTimeNight']")[i].value === ""){
 						name.push(new String("無"));
 					}else{
