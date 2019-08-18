@@ -37,7 +37,7 @@
 		var emailInput = document.getElementById('ip-email');
 		var accountInput = document.getElementById('ip-account');
 		
-		accountInput.onkeyup = function(e){
+		accountInput.onkeyup = function(e) {
 			if( accountInput.value.length > 6){
 				document.getElementById('ipa').setAttribute('hidden','hidden');
 				document.getElementById('bc').removeAttribute('disabled');
@@ -47,36 +47,20 @@
 			}
 		};
 		
-		nameInput.onkeyup = function(e){
-			if( nameInput.value.length > 0){
-				document.getElementById('ipn').setAttribute('hidden','hidden');
-			}else{
-				document.getElementById('ipn').removeAttribute('hidden');
-			}
+		nameInput.onkeyup = function(e) {
+			nameInput.value.length > 0 ? document.getElementById('ipn').setAttribute('hidden','hidden') : document.getElementById('ipn').removeAttribute('hidden');
 		};
 		
-		passwordInput.onkeyup = function(e){
-			if(passwordInput.value.length >= 8){
-				document.getElementById('ip1').setAttribute('hidden','hidden');
-			}else{
-				document.getElementById('ip1').removeAttribute('hidden');
-			}
+		passwordInput.onkeyup = function(e) {
+			passwordInput.value.length > 7 ? document.getElementById('ip1').setAttribute('hidden','hidden') : document.getElementById('ip1').removeAttribute('hidden');
 		};
 		
 		passwordInput2.onkeyup = function (e) {
-			if( passwordInput.value !== passwordInput2.value){
-				document.getElementById('ip2').removeAttribute('hidden');
-			}else if(passwordInput.value === passwordInput2.value){
-				document.getElementById('ip2').setAttribute('hidden','hidden');
-			}
+			passwordInput.value !== passwordInput2.value ? document.getElementById('ip2').removeAttribute('hidden') : document.getElementById('ip2').setAttribute('hidden','hidden');
 		};
 		
-		emailInput.onkeyup = function(e){
-			if( validateEmail(emailInput.value)){
-				document.getElementById('ipe').setAttribute('hidden','hidden');
-			}else{
-				document.getElementById('ipe').removeAttribute('hidden');
-			}
+		emailInput.onkeyup = function(e) {
+			validateEmail(emailInput.value) ? document.getElementById('ipe').setAttribute('hidden','hidden') : document.getElementById('ipe').removeAttribute('hidden');
 		};
 
 		function validateEmail(email) {
@@ -124,7 +108,7 @@
 	</script> 
 	<style>
 		body {
-		background-color: #cccccc;
+			background-color: #cccccc;
 		}
 	</style>
 </body>
