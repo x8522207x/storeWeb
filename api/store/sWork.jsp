@@ -26,7 +26,7 @@ if(arrange.equals("true")){
 		if(!jar.isEmpty()){
 			for(int i= 0 ; i< day.length ;i++){
 				JSONObject obj = jar.getJSONObject(0);
-				sql = "INSERT INTO `staff-arrange`( `user`,`name`, `year`, `month`, `day`, `orderWork`) VALUES ('"+user+"','"+name+"','"+year+"','"+(Integer.parseInt(month)+2)+"','"+day[i]+"','"+obj.get("workTime")+"')";
+				sql = "INSERT INTO `staff-arrange`( `user`,`name`, `year`, `month`, `day`, `orderWork`) VALUES ('"+user.trim()+"','"+name+"','"+year+"','"+(Integer.parseInt(month)+2)+"','"+day[i]+"','"+obj.get("workTime")+"')";
 				a.executeSQLUpdate(sql);
 			}
 		}
@@ -77,7 +77,7 @@ if(arrange.equals("true")){
 	JSONObject jsonO = new JSONObject();
 	Set<String> setName = new LinkedHashSet<>(); 
 	if(!name.isEmpty() ){
-		for(int i= 0 ; i< name.length() ;i++){
+		for(int i = 0 ; i < name.length() ;i++){
 			JSONObject obj = name.getJSONObject(i);
 			nameAL.add(obj.get("workTime")+"_"+obj.get("name")+"("+obj.get("user")+")");
 		}
