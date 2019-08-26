@@ -22,77 +22,78 @@
 		</form>
 	</div>
 	<script>
-	var identity = "";
-	
-	function staffLog(){
-		identity = "staff";
-		$("#role")[0].textContent = "員工";
-		$("#loginDiv").attr('hidden',false);
-	}
-	
-	function bossLog(){
-		identity = "boss";
-		$("#role")[0].textContent = "老闆";
-		$("#loginDiv").attr('hidden',false);
-	}
-	
-	$("#loginButton").click(function(){
-		var redirect = false;
-		var user = "";
-		if(identity === "staff"){
-			$.ajax({
-				url: 'api/store/sAccountDB.jsp',
-				type: 'POST',
-				async: false,
-				data: {
-					"sLogIn"  : "true",
-					"account"	: $("#account").val(),
-					"password"	: $("#password").val(),
-				},
-			}).done(function (data){
-				if(data.includes("true") === true){
-					name = data.split(";")[1];
-					user = data.split(";")[2];
-					redirect = true;
-				}else if(data.includes("pfalse") === true){
-					alert("密碼輸入錯誤");
-				}else if(data.includes("afalse") === true){
-					alert("查無此帳號");
-				}
-			});
-		} else {
-			$.ajax({
-				url: 'api/store/bAccountDB.jsp',
-				type: 'POST',
-				async: false,
-				data: {
-					"bLogIn"  : "true",
-					"account"	: $("#account").val(),
-					"password"	: $("#password").val(),
-				},
-			}).done(function (data){
-				if(data.includes("true") === true){
-					name = data.split(";")[1];
-					user = data.split(";")[2];
-					redirect = true;
-				}else if(data.includes("pfalse") === true){
-					alert("密碼輸入錯誤");
-				}else if(data.includes("afalse") === true){
-					alert("查無此帳號");
-				}
-			});
+		var identity = "";
+		
+		function staffLog() {
+			identity = "staff";
+			$("#role")[0].textContent = "員工";
+			$("#loginDiv").attr('hidden',false);
 		}
-		if(redirect === true){
-			setCookie('identity',identity, 30);
-			setCookie('name',name, 30);
-			setCookie('user',user, 30);
-			$(location).attr('href','http://localhost:8080/storebackup/lobby.jsp')
+		
+		function bossLog() {
+			identity = "boss";
+			$("#role")[0].textContent = "老闆";
+			$("#loginDiv").attr('hidden',false);
 		}
-	})
-	
-	function register(){
-		identity === "staff" ? $(location).attr('href','http://localhost:8080/storebackup/staffRegister.jsp') : $(location).attr('href','http://localhost:8080/storebackup/bossRegister.jsp');
-	}
+		
+		$("#loginButton").click(function() {
+			let redirect = false;
+			let user = "";
+			if(identity === "staff") {
+				$.ajax({
+					url: 'api/store/sAccountDB.jsp',
+					type: 'GET',
+					async: false,
+					data: {
+						"sLogIn"  : "true",
+						"account"	: $("#account").val(),
+						"password"	: $("#password").val(),
+					},
+				}).done(function (data) {
+					if(data.includes("true") === true) {
+						name = data.split(";")[1];
+						user = data.split(";")[2];
+						redirect = true;
+					}else if(data.includes("pfalse") === true) {
+						alert("密碼輸入錯誤");
+					}else if(data.includes("afalse") === true) {
+						alert("查無此帳號");
+					}
+				});
+			} else {
+				$.ajax({
+					url: 'api/store/bAccountDB.jsp',
+					type: 'GET',
+					async: false,
+					data: {
+						"bLogIn"  : "true",
+						"account"	: $("#account").val(),
+						"password"	: $("#password").val(),
+					},
+				}).done(function (data) {
+					if(data.includes("true") === true) {
+						name = data.split(";")[1];
+						user = data.split(";")[2];
+						redirect = true;
+					}else if(data.includes("pfalse") === true) {
+						alert("密碼輸入錯誤");
+					}else if(data.includes("afalse") === true) {
+						alert("查無此帳號");
+					}
+				});
+			}
+			
+			if(redirect === true) {
+				setCookie('identity',identity, 30);
+				setCookie('name',name, 30);
+				setCookie('user',user, 30);
+				$(location).attr('href','http://localhost:8080/storebackup/lobby.jsp')
+			}
+		})
+		
+		function register() {
+			identity === "staff" ? $(location).attr('href','http://localhost:8080/storebackup/staffRegister.jsp') : $(location).attr('href','http://localhost:8080/storebackup/bossRegister.jsp');
+		}
 
 	</script>
 	<style>

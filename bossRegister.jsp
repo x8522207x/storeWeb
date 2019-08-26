@@ -12,8 +12,8 @@
 			<br>
 			<label for="inputBossNumber" class="margin-top-20">帳號</label>
 			<input type="text" id="ip-account" name="account" class="form-control" placeholder="">
-			<span class="danger" id="ipa" style="color:red;">請輸入帳號(7個字元以上)</span>
 			<button id="bc" type="button" disabled>檢查重複</button>
+			<span class="danger" id="ipa" style="color:red;">請輸入帳號(7個字元以上)</span>
 			<br>
 			<label for="inputPassword">密碼</label> 
 			<input type="password" id="ip-password" name="password" class="form-control" placeholder="">
@@ -31,17 +31,17 @@
 		</form>
 	</div>
 	<script>
-		var nameInput = document.getElementById('ip-name');
-		var passwordInput = document.getElementById('ip-password');
-		var passwordInput2 = document.getElementById('ip-password-2');
-		var emailInput = document.getElementById('ip-email');
-		var accountInput = document.getElementById('ip-account');
+		var nameInput = document.getElementById('ip-name'),
+			passwordInput = document.getElementById('ip-password'),
+			passwordInput2 = document.getElementById('ip-password-2'),
+			emailInput = document.getElementById('ip-email'),
+			accountInput = document.getElementById('ip-account');
 		
 		accountInput.onkeyup = function(e) {
-			if( accountInput.value.length > 6){
+			if( accountInput.value.length > 6) {
 				document.getElementById('ipa').setAttribute('hidden','hidden');
 				document.getElementById('bc').removeAttribute('disabled');
-			}else{
+			} else {
 				document.getElementById('ipa').removeAttribute('hidden');
 				document.getElementById('bc').setAttribute('disabled','disabled');
 			}
@@ -67,10 +67,10 @@
 			var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 			return re.test(String(email).toLowerCase());
 		}
-		document.querySelector("#final").addEventListener('click', function register(){
-			if( nameInput.value.length === 0 || passwordInput.value.length === 0 || passwordInput2.value.length === 0 || emailInput.value.length === 0 ||  accountInput.value.length === 0){
+		document.querySelector("#final").addEventListener('click', function register() {
+			if( nameInput.value.length === 0 || passwordInput.value.length === 0 || passwordInput2.value.length === 0 || emailInput.value.length === 0 ||  accountInput.value.length === 0) {
 				alert("還有欄位未填");
-			}else if( nameInput.value.length > 0 && passwordInput.value.length > 7 && passwordInput2.value.length > 7 && emailInput.value.length > 0 &&  accountInput.value.length>6){
+			}else if( nameInput.value.length > 0 && passwordInput.value.length > 7 && passwordInput2.value.length > 7 && emailInput.value.length > 0 &&  accountInput.value.length>6) {
 				$.ajax({
 					url: 'api/store/bAccountDB.jsp',
 					type: 'POST',
@@ -88,19 +88,19 @@
 			}
 		});
 
-		$("#bc").click( function(){
+		$("#bc").click( function() {
 			$.ajax({
 				url: 'api/store/bAccountDB.jsp',
-				type: 'POST',
+				type: 'GET',
 				data: {
 					"check"  : "true",
 					"account"	: accountInput.value,
 				},
-			}).done(function (data){
-				if(data.includes("true") === true){
+			}).done(function (data) {
+				if(data.includes("true") === true) {
 					alert("恭喜!這個帳號可以使用");
 					document.getElementById('final').removeAttribute('disabled');
-				}else if(data.includes("false") === true){
+				}else if(data.includes("false") === true) {
 					alert("這個帳號已經有人註冊");
 				}
 			});

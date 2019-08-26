@@ -14,19 +14,16 @@
 %>
 <body>
 	<script>
-		var user = getCookie('user');
-		var name = getCookie('name');
-		var identity = getCookie('identity');
-		if(user === "" && identity === "" && name === ""){
-			var result = alert("請登入");
+		let user = getCookie('user'),
+			name = getCookie('name'),
+			identity = getCookie('identity');
+		if(user === "" && identity === "" && name === "") {
+			let result = alert("請登入");
 			window.location = "http://localhost:8080/storebackup/login.jsp";
 		}
 	</script>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<a class="navbar-brand" href="lobby.jsp">超商店員排班系統</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
 		<h4 id="alertTime" style="text-align: center;color: red;"></h4>
 		<h4 id="name" style="position:absolute;right:80px;"></h4>
 		<a class="btn btn-outline-primary" id="logOut" style="position:absolute;right:10px;">登出</a>
@@ -37,17 +34,17 @@
 				<div class="sidebar-sticky">
 					<ul class="nav flex-column">
 						<li class="nav-item">
-							<a class="nav-link active" id="calendar" onclick="calendar()" href="#calendar">
+							<a class="nav-link active" id="calendar" href="#calendar">
 								<img src="image/calendar.png" height="24" width="24">班表
 							</a>
 						</li>
 						<li class="nav-item">  
-							<a class="nav-link active" id="calendarAll" onclick="calendarAll()" href="#calendarAll">
+							<a class="nav-link active" id="calendarAll" href="#calendarAll">
 								<img src="image/calendarAll.png" height="24" width="24">班表(全部)
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link active" id="calendarSet" onclick="calendarSet()" href="#calendarSet">
+							<a class="nav-link active" id="calendarSet" href="#calendarSet">
 								<img src="image/calendarSet.png" height="24" width="24">排班
 							</a>
 						</li>
@@ -134,11 +131,11 @@
 				<div id="div3" hidden>
 					<h4>選擇下個月可能可以上班的日期</h4>
 					<%
-						for(int i= 1; i<= daysInMonth; i++){
+						for(int i= 1; i<= daysInMonth; i++) {
 					%>
-					<input type="checkbox" id= "arrange<%= i%>"><%= i%></input>
+					<input type="checkbox" id= "day<%= i%>"><%= i%></input>
 					<%
-							if(i%7 == 0){
+							if(i%7 == 0) {
 					%>
 					<br>
 					<%
@@ -146,10 +143,10 @@
 						}
 					%>
 					<br>
-					<input type="checkbox" id="checkArrange">全選</input>
+					<input type="checkbox" id="arrangeCheck">全選</input>
 					<br>
-					<input type="button" id="cancelArrange" value="取消"></input>
-					<input type="button" value="送出" onclick="arrangeSubmit()"></input>
+					<input type="button" id="arrangeCancel" value="取消"></input>
+					<input type="button" value="送出" id="submit"></input>
 				</div>
 				<div id="div4" hidden>
 					<h4>已選的日期</h4>
@@ -157,13 +154,13 @@
 						a.connection();
 						String sql = "SELECT `day` FROM `staff-arrange` WHERE `name` ='"+session.getAttribute("name")+"' and `month`="+(now.get(Calendar.MONTH)+2)+" and `user` ='"+session.getAttribute("user")+"'ORDER BY CAST(`staff-arrange`.`day` AS UNSIGNED) ASC";
 						jar = a.getData(sql);
-						if(!jar.isEmpty()){
-							for(int i = 0; i < jar.length(); i++){
+						if(!jar.isEmpty()) {
+							for(int i = 0; i < jar.length(); i++) {
 								JSONObject obj = jar.getJSONObject(i);
 					%>
 					<input type="checkbox" id="edit<%=obj.get("day")%>"><%=obj.get("day")%></input>
 					<%
-								if(i%7 == 6){
+								if(i%7 == 6) {
 					%>
 					<br>
 					<%
@@ -172,10 +169,10 @@
 						}
 					%>
 					<br>
-					<input type="checkbox" id="editArrange">全選</input>
+					<input type="checkbox" id="arrangeEdit">全選</input>
 					<br>
 					<input type="button" id="cancelEdit" value="取消"></input>
-					<input type="button" value="刪除" onclick="arrangeDelete()"></input>
+					<input type="button" id="delete" value="刪除"></input>
 				</div>
 				<div id="div5" class="row" hidden>
 					<h4>安排上班人員</h4>
@@ -190,14 +187,14 @@
 							StringBuilder advice = new StringBuilder();
 							StringBuilder unadvice = new StringBuilder();
 							StringBuilder decide = new StringBuilder();
-							for(int i= 1; i<= daysInMonth; i++){
+							for(int i= 1; i<= daysInMonth; i++) {
 						%>
 						<h6><%=i%>(選擇人員：<span>
 							<select id="workTimeMorning<%=i%>">
 								<option value=""></option>
 							<%
-								if(!morningWorker.isEmpty()){
-									for(int j= 0; j<morningWorker.length(); j++){
+								if(!morningWorker.isEmpty()) {
+									for(int j= 0; j<morningWorker.length(); j++) {
 										JSONObject obj = morningWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name")+"("+obj.get("user")+")"+i%>"><%=obj.get("name")+"("+obj.get("user")+")"%></option>
@@ -213,38 +210,38 @@
 								advice.delete(0, advice.length());
 								unadvice.delete(0, unadvice.length());
 								decide.delete(0, decide.length());
-								if(!workerC.isEmpty()){
-									for(int j= 0; j< workerC.length(); j++){
+								if(!workerC.isEmpty()) {
+									for(int j= 0; j< workerC.length(); j++) {
 										JSONObject obj = workerC.getJSONObject(j);
 										workerChoose.add(obj.get("name").toString()+"("+obj.get("user")+")");//這一天有誰可以工作
 									}
 								}
-								if(!decidePeople.isEmpty()){
-									for(int j= 0; j< decidePeople.length(); j++){
+								if(!decidePeople.isEmpty()) {
+									for(int j= 0; j< decidePeople.length(); j++) {
 										JSONObject obj = decidePeople.getJSONObject(j);
 										decide.append(obj.get("name")+"("+obj.get("user")+")");
 									}
 								}
-								if(!morningWorker.isEmpty()){
-									for(int j= 0; j< morningWorker.length(); j++){
+								if(!morningWorker.isEmpty()) {
+									for(int j= 0; j< morningWorker.length(); j++) {
 										JSONObject obj = morningWorker.getJSONObject(j);
 										worker.add(obj.get("name").toString()+"("+obj.get("user")+")");//工作時間是早上的人
 									}
 								}
-								if(workerChoose.size() != 0){
-									for(int j= 0; j< workerChoose.size(); j++){
+								if(workerChoose.size() != 0) {
+									for(int j= 0; j< workerChoose.size(); j++) {
 										advice.append(workerChoose.get(j)+"、");
 									}
-									for(int k= 0;k< workerChoose.size(); k++){
-										for(int j= 0; j< worker.size(); j++){
-											if(worker.get(j).equals(workerChoose.get(k))){
+									for(int k= 0;k< workerChoose.size(); k++) {
+										for(int j= 0; j< worker.size(); j++) {
+											if(worker.get(j).equals(workerChoose.get(k))) {
 												worker.remove(j);
 												break;
 											}
 										}
 									}
 								}
-								for(int j= 0; j< worker.size(); j++){
+								for(int j= 0; j< worker.size(); j++) {
 									unadvice.append(worker.get(j)+"、");
 								}
 								advice = advice.length() > 0 ? new StringBuilder(new StringBuilder(advice.substring(0, advice.length() - 1))) : advice;
@@ -272,14 +269,14 @@
 						<h5>8:00 a.m. ~ 4:00 p.m.(2人/天)</h5>
 						<%
 							JSONArray noonWorker = a.getData("SELECT `user`,`name` FROM `staff-account` WHERE `workTime` = 'noon'");
-							for(int i= 1; i<= daysInMonth; i++){
+							for(int i= 1; i<= daysInMonth; i++) {
 						%>
 						<h6><%=i%>(選擇人員：<span>
 							<select id="workTimeNoon<%=i%>">
 								<option value=""></option>
 							<%
-								if(!noonWorker.isEmpty()){
-									for(int j= 0; j<noonWorker.length(); j++){
+								if(!noonWorker.isEmpty()) {
+									for(int j= 0; j<noonWorker.length(); j++) {
 										JSONObject obj = noonWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
@@ -291,8 +288,8 @@
 							<select id="twoWorkTimeNoon<%=i%>">
 								<option value=""></option>
 							<%
-								if(!noonWorker.isEmpty()){
-									for(int j= 0; j<noonWorker.length(); j++){
+								if(!noonWorker.isEmpty()) {
+									for(int j= 0; j<noonWorker.length(); j++) {
 										JSONObject obj = noonWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"+i%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
@@ -308,38 +305,38 @@
 								advice.delete(0, advice.length());
 								unadvice.delete(0, unadvice.length());
 								decide.delete(0, decide.length());
-								if(!workerC.isEmpty()){
-									for(int j= 0; j<workerC.length(); j++){
+								if(!workerC.isEmpty()) {
+									for(int j= 0; j<workerC.length(); j++) {
 										JSONObject obj = workerC.getJSONObject(j);
 										workerChoose.add(obj.get("name").toString()+"("+obj.get("user")+")");//這一天有誰可以工作
 									}
 								}
-								if(!decidePeople.isEmpty()){
-									for(int j= 0; j<decidePeople.length(); j++){
+								if(!decidePeople.isEmpty()) {
+									for(int j= 0; j<decidePeople.length(); j++) {
 										JSONObject obj = decidePeople.getJSONObject(j);
 										decide.append(obj.get("name").toString()+"("+obj.get("user")+")"+"、");
 									}
 								}
-								if(!noonWorker.isEmpty()){
-									for(int j= 0; j<noonWorker.length(); j++){
+								if(!noonWorker.isEmpty()) {
+									for(int j= 0; j<noonWorker.length(); j++) {
 										JSONObject obj = noonWorker.getJSONObject(j);
 										worker.add(obj.get("name").toString()+"("+obj.get("user")+")");//工作時間是早上的人
 									}
 								}
-								if(workerChoose.size() != 0){				
-									for(int j= 0; j< workerChoose.size(); j++){
+								if(workerChoose.size() != 0) {				
+									for(int j= 0; j< workerChoose.size(); j++) {
 										advice.append(workerChoose.get(j)+"、");
 									}
-									for(int k= 0;k< workerChoose.size(); k++){
-										for(int j= 0; j<worker.size(); j++){
-											if(worker.get(j).equals(workerChoose.get(k))){
+									for(int k= 0;k< workerChoose.size(); k++) {
+										for(int j= 0; j<worker.size(); j++) {
+											if(worker.get(j).equals(workerChoose.get(k))) {
 												worker.remove(j);
 												break;
 											}
 										}
 									}
 								}
-								for(int j= 0; j<worker.size(); j++){
+								for(int j= 0; j<worker.size(); j++) {
 									unadvice.append(worker.get(j)+"、");
 								}
 								advice = advice.length() > 0 ? new StringBuilder(advice.substring(0, advice.length() - 1)) : advice;
@@ -368,14 +365,14 @@
 						<h5>4:00 p.m. ~ 12:00 a.m.(2人/天)</h5>
 						<%
 							JSONArray nightWorker =a.getData("SELECT `user`,`name` FROM `staff-account` WHERE `workTime` = 'night'");
-							for(int i= 1; i<= daysInMonth; i++){
+							for(int i= 1; i<= daysInMonth; i++) {
 						%>
 						<h6><%=i%>(選擇人員：<span>
 							<select id="workTimeNight<%=i%>">
 								<option value=""></option>
 							<%
-								if(!nightWorker.isEmpty()){
-									for(int j= 0; j<nightWorker.length(); j++){
+								if(!nightWorker.isEmpty()) {
+									for(int j= 0; j<nightWorker.length(); j++) {
 										JSONObject obj = nightWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
@@ -387,8 +384,8 @@
 							<select id="twoWorkTimeNight<%=i%>">
 								<option value=""></option>
 							<%
-								if(!nightWorker.isEmpty()){
-									for(int j= 0; j<nightWorker.length(); j++){
+								if(!nightWorker.isEmpty()) {
+									for(int j= 0; j<nightWorker.length(); j++) {
 										JSONObject obj = nightWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"+i%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
@@ -404,38 +401,38 @@
 								advice.delete(0, advice.length());
 								unadvice.delete(0, unadvice.length());
 								decide.delete(0, decide.length());
-								if(!workerC.isEmpty()){
-									for(int j= 0; j<workerC.length(); j++){
+								if(!workerC.isEmpty()) {
+									for(int j= 0; j<workerC.length(); j++) {
 										JSONObject obj = workerC.getJSONObject(j);
 										workerChoose.add(obj.get("name").toString()+"("+obj.get("user")+")");//這一天有誰可以工作
 									}
 								}
-								if(!decidePeople.isEmpty()){
-									for(int j= 0; j<decidePeople.length(); j++){
+								if(!decidePeople.isEmpty()) {
+									for(int j= 0; j<decidePeople.length(); j++) {
 										JSONObject obj = decidePeople.getJSONObject(j);
 										decide.append(obj.get("name").toString()+"("+obj.get("user")+")"+"、");
 									}
 								}
-								if(!nightWorker.isEmpty()){
-									for(int j= 0; j<nightWorker.length(); j++){
+								if(!nightWorker.isEmpty()) {
+									for(int j= 0; j<nightWorker.length(); j++) {
 										JSONObject obj = nightWorker.getJSONObject(j);
 										worker.add(obj.get("name").toString()+"("+obj.get("user")+")");//工作時間是早上的人
 									}
 								}
-								if(workerChoose.size() != 0){				
-									for(int j= 0; j< workerChoose.size(); j++){
+								if(workerChoose.size() != 0) {				
+									for(int j= 0; j< workerChoose.size(); j++) {
 										advice.append(workerChoose.get(j)+"、");
 									}
-									for(int k= 0;k< workerChoose.size(); k++){
-										for(int j= 0; j<worker.size(); j++){
-											if(worker.get(j).equals(workerChoose.get(k))){
+									for(int k= 0;k< workerChoose.size(); k++) {
+										for(int j= 0; j<worker.size(); j++) {
+											if(worker.get(j).equals(workerChoose.get(k))) {
 												worker.remove(j);
 												break;
 											}
 										}
 									}
 								}
-								for(int j= 0; j<worker.size(); j++){
+								for(int j= 0; j<worker.size(); j++) {
 									unadvice.append(worker.get(j)+"、");
 								}
 								
@@ -469,341 +466,10 @@
 			</main>
 		</div>
 	</div>
+	<script src="JS/calendar.js"></script>
+	<script src="JS/event.js"></script>
 	<script type="text/javascript">
-		var month_olympic = [31,29,31,30,31,30,31,31,30,31,30,31];
-		var month_normal = [31,28,31,30,31,30,31,31,30,31,30,31];
-		var month_name = ["January","Febrary","March","April","May","June","July","Auguest","September","October","November","December"];
-		var holder = document.getElementById("days");
-		/*var prev = document.getElementById("prev");
-		var next = document.getElementById("next");*/
-		var ctitle = document.getElementById("calendar-title");
-		var cyear = document.getElementById("calendar-year");
-		var my_date = new Date();
-		var my_year = my_date.getFullYear();
-		var my_month = my_date.getMonth();
-		var my_day = my_date.getDate();
-		
-		function dayStart(month, year) {
-			var tmpDate = new Date(year, month, 1);
-			return (tmpDate.getDay());
-		}
-		
-		function daysMonth(month, year) {
-			var tmp = year % 4;
-			if (tmp === 0) {
-				return (month_olympic[month]);
-			} else {
-				return (month_normal[month]);
-			}
-		}
-		
-		function refreshDate(){
-			var str = "";
-			var totalDay = daysMonth(my_month, my_year); 
-			var firstDay = dayStart(my_month, my_year); 
-			var myclass;
-			for(let i= 1 ; i < firstDay; i++){ 
-				str += "<li id=></li>"; 
-			}
-			for(let i= 1 ; i <= totalDay; i++){
-				str += "<li id="+my_year+"_"+(my_month+1)+"_"+i+">"+i+"</li>";
-			}
-			holder.innerHTML = str; 
-			ctitle.innerHTML = month_name[my_month]; 
-			cyear.innerHTML = my_year; 
-			$.ajax({
-				url: 'api/store/sWork.jsp',
-				type: 'POST',
-				async: false,
-				data: {
-					"getWorkTime"		: "true",
-					"name"  : getCookie('name'),
-					"month"	: my_month,
-					"year"	: my_year,
-				},
-			}).done(function (data){
-				for(let i = 0; i < data.split("、").length-1; i++){
-					$("#"+my_year+"_"+(my_month+1)+"_"+data.split("、")[i])[0].className += "green-small";
-				}
-			});
-		}
-		
-		function calendar(){
-			$("#main1").attr('hidden',false);
-			$("#main2").attr('hidden',true);
-			$("#main3").attr('hidden',true);
-		}
-		
-		function calendarAll(){
-			$("#main1").attr('hidden',true);
-			$("#main2").attr('hidden',false);
-			$("#main3").attr('hidden',true);
-		}
-		
-		function calendarSet(){
-			$("#main1").attr('hidden',true);
-			$("#main2").attr('hidden',true);
-			$("#main3").attr('hidden',false);
-		}
-		
-		/*prev.onclick = function(e){
-			e.preventDefault();
-			my_month--;
-			if(my_month<0){
-				my_year--;
-				my_month = 11;
-			}
-			refreshDate();
-		}
-		next.onclick = function(e){
-			e.preventDefault();
-			my_month++;
-			if(my_month>11){
-				my_year++;
-				my_month = 0;
-			}
-			refreshDate();
-		}*/
-		$("#checkArrange").click(function(){
-			if($("#checkArrange").prop("checked")){//如果全選按鈕有被選擇的話（被選擇是true）
-				$("input[id*='arrange']").each(function(){
-					$(this).prop("checked",true);//把所有的核取方框的property都變成勾選
-				})
-			}else{
-				$("input[id*='arrange']").each(function(){
-					$(this).prop("checked",false);//把所有的核方框的property都取消勾選
-				})
-			}
-		})
-		
-		$("#editArrange").click(function(){
-			if($("#editArrange").prop("checked")){//如果全選按鈕有被選擇的話（被選擇是true）
-				$("input[id*='edit']").each(function(){
-					$(this).prop("checked",true);//把所有的核取方框的property都變成勾選
-				})
-			}else{
-				$("input[id*='edit']").each(function(){
-					$(this).prop("checked",false);//把所有的核方框的property都取消勾選
-				})
-			}
-		})
-		
-		$("#cancelArrange").click(function(){
-			$("input[id*='arrange']").each(function(){
-				$(this).prop("checked",false);//把所有的核取方框的property都變成勾選
-			})
-			$("#checkArrange").prop("checked",false);
-		})
-		
-		$("#cancelEdit").click(function(){
-			$("input[id*='edit']").each(function(){
-				$(this).prop("checked",false);//把所有的核取方框的property都變成勾選
-			})
-			$("#editArrange").prop("checked",false);
-		})
-		
-		$("#logOut").click(function(){
-			deleteCookie('identity');
-			deleteCookie('name');
-			deleteCookie('user');
-			$(location).attr('href','http://localhost:8080/storebackup/login.jsp')
-		})
-		
-		function arrangeSubmit(){
-			var day = [];
-			for(let i in $("input[id*='arrange']")){
-				if($("input[id*='arrange']")[i] && $("input[id*='arrange']")[i].checked === true){
-					day.push(Number(i)+1);
-				}
-			}
-			for(let i in $("input[id*='edit']")){
-				if($("input[id*='edit']")[i]){
-					for(let j = 0; j < day; j++){
-						if(day[j] === Number($("input[id*='edit']")[i].nextSibling.data.trim())){
-							day.splice(j, 1);
-							break;
-						}
-					}
-				}
-			}
-			$.ajax({
-				url: 'api/store/sWork.jsp',
-				type: 'POST',
-				async: false,
-				data: {
-					"arrange": "true",
-					"name"  : getCookie('name'),
-					"user"	: getCookie('user'),
-					"day"	: day,
-					"month"	: my_month,
-					"year"	: my_year,
-				},
-			}).done(function(){
-				window.location = "http://localhost:8080/storebackup/lobby.jsp";
-			});
-		}
-		
-		function arrangeDelete(){
-			var day = [];
-			for(let i in $("input[id*='edit']")){
-				if($("input[id*='edit']")[i] && $("input[id*='edit']")[i].checked === true){
-					day.push($("input[id*='edit']")[i].nextSibling.data.trim());
-				}
-			}
-			$.ajax({
-				url: 'api/store/sWork.jsp',
-				type: 'POST',
-				async: false,
-				data: {
-					"edit"	: "true",
-					"user"  : getCookie('user'),
-					"day"	: day,
-				},
-			}).done(function(){
-				window.location = "http://localhost:8080/storebackup/lobby.jsp";
-			});
-		}
-		
-		document.getElementById('bossArrange').addEventListener('click', function bossArrange(e){
-			var noonAir = "";
-			var nightAir = "";
-			for(let i in $("select[id*='workTimeNoon']")){
-				if(($("select[id*='workTimeNoon']")[i].value === "" && $("select[id*='twoWorkTimeNoon']")[i].value !== "") || ($("select[id*='workTimeNoon']")[i].value !== "" && $("select[id*='twoWorkTimeNoon']")[i].value === "") || ($("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value && $("select[id*='twoWorkTimeNoon']")[i].value !== "")){
-					noonAir += (i+1)+"、";
-				}
-				if(($("select[id*='workTimeNight']")[i].value === "" && $("select[id*='twoWorkTimeNight']")[i].value !== "") || ($("select[id*='workTimeNight']")[i].value !== "" && $("select[id*='twoWorkTimeNight']")[i].value === "") || ($("select[id*='workTimeNight']")[i].value === $("select[id*='twoWorkTimeNight']")[i].value && $("select[id*='twoWorkTimeNight']")[i].value !== "")){
-					nightAir += (i+1)+"、";
-				}
-			}
-			if(noonAir.length > 0 || nightAir.length > 0){
-				noonAir = noonAir.substring(0, noonAir.length-1);
-				nightAir = nightAir.substring(0, nightAir.length-1);
-				alert("午班："+noonAir+" 以及 晚班："+nightAir+" 有少派人 或者 重複指派人");
-			}else{
-				var name = [];
-				for(let i in $("select[id*='workTimeMorning']")){
-					if($("select[id*='workTimeMorning']")[i].value === ""){
-						name.push(new String("無"));
-					}else{
-						const value = $("select[id*='workTimeMorning']")[i].value;
-						name.push(value);
-					}
-				}
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"decide": "true",
-						"name"  : name,
-						"year"	: my_year,
-						"month"	: my_month,
-						"orderWork"	: "morning",
-					},
-				});
-				name = [];
-				for(let i in $("select[id*='workTimeNoon']")){
-					if($("select[id*='twoWorkTimeNoon']")[i].value === "" || $("select[id*='workTimeNoon']")[i].value === ""){
-						name.push(new String("無"));
-					}else{
-						name.push($("select[id*='workTimeNoon']")[i].value+$("select[id*='twoWorkTimeNoon']")[i].value);
-						console.log($("select[id*='workTimeNoon']")[i].value+$("select[id*='twoWorkTimeNoon']")[i].value);
-					}
-				}
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"decide": "true",
-						"name"  : name,
-						"year"	: my_year,
-						"month"	: my_month,
-						"orderWork"	: "noon",
-					},
-				});
-				name = [];
-				for(let i in $("select[id*='workTimeNight']")){
-					if($("select[id*='twoWorkTimeNight']")[i].value === "" || $("select[id*='workTimeNight']")[i].value === ""){
-						name.push(new String("無"));
-					}else{
-						name.push($("select[id*='workTimeNight']")[i].value+$("select[id*='twoWorkTimeNight']")[i].value);
-					}
-				}
-
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"decide": "true",
-						"name"  : name,
-						"year"	: my_year,
-						"month"	: my_month,
-						"orderWork"	: "night",
-					},
-				}).done(function(){
-					window.location = "http://localhost:8080/storebackup/lobby.jsp";
-				});
-			}
-			alert();
-		});
-		
-		$(function() {
-			if(getCookie('identity') === "boss"){
-				$("#calendar").attr('hidden',true);
-				$("#calendarAll").attr('hidden',false);
-				$("#calendarSet").attr('hidden',false);
-				$("#div3").attr('hidden', true);
-				$("#div4").attr('hidden', true);
-				$("#div5").attr('hidden', false);
-				$("#div6").attr('hidden', false);
-				$("#limitTime").attr('hidden', true);
-				$("#bossArrange").attr('hidden', false);
-				$.ajax({
-					url: 'api/store/sWork.jsp',
-					type: 'POST',
-					async: false,
-					data: {
-						"allTable": "true",
-						"year"	: my_year,
-						"month"	: my_month,
-					},
-				}).done(function(data){
-					var morningT = "";
-					var noonT = "";
-					var nightT = "";
-					for(let i in JSON.parse(data)){
-						if(i.split("_")[0].includes("morning")){
-							$("#morningTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
-						}else if(i.split("_")[0].includes("noon")){
-							$("#noonTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
-						}else if(i.split("_")[0].includes("night")){
-							$("#nightTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
-						}
-					}
-				});
-			}else{
-				$("#calendar").attr('hidden',false); 
-				$("#calendarAll").attr('hidden',true);
-				$("#calendarSet").attr('hidden',true);
-				$("#div3").attr('hidden', false);
-				$("#div4").attr('hidden', false);
-				$("#div5").attr('hidden', true);
-				$("#div6").attr('hidden', true);
-			}
-			$("#limitTime").text("開放時間："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
-			$("#name").text(getCookie('name'));
-
-			if((my_day < (daysMonth(my_month, my_year)-25) || my_day > (daysMonth(my_month, my_year)-1) )&& getCookie('identity') === "staff"){
-				$("#calendarSet").attr('hidden',true);
-				$("#alertTime").text("請注意本月排班時間是："+(my_month+1)+"/"+(daysMonth(my_month, my_year)-6)+"～"+(my_month+1)+"/"+(daysMonth(my_month, my_year)-1));
-			}else if((daysMonth(my_month, my_year)-6) <= my_day <= (daysMonth(my_month, my_year)-1) && getCookie('identity') === "staff"){
-				$("#calendarSet").attr('hidden',false);
-			}
-			refreshDate();
-		})
-		
+		let calendarO = new Calendar("days", "calendar-title", "calendar-year");	
 	</script>
 	<style>
 		.calendar{
