@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"%>
 <jsp:include page='includes/head.jsp'></jsp:include>
 <body>
-	<div class="container" id="app">
+	<div class="container">
 		<form class="register-form" role="form" method="POST" id="form1">
 			<div class="rg-back-login"><a href="login.jsp">回登入頁</a></div> 
 			<input type="hidden" name="op" value="add">
@@ -12,7 +12,7 @@
 			<br>
 			<label for="inputBossNumber" class="margin-top-20">帳號</label>
 			<input type="text" id="ip-account" name="account" class="form-control" placeholder="">
-			<button id="bc" type="button" disabled>檢查重複</button>
+			<button type="button" id="bc" disabled>檢查重複</button>
 			<span class="danger" id="ipa" style="color:red;">請輸入帳號(7個字元以上)</span>
 			<br>
 			<label for="inputPassword">密碼</label> 
