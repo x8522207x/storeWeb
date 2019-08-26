@@ -1,54 +1,3 @@
-const nameInput = document.getElementById('ip-name'),
-	  passwordInput = document.getElementById('ip-password'),
-	  passwordInput2 = document.getElementById('ip-password-2'),
-	  emailInput = document.getElementById('ip-email'),
-	  accountInput = document.getElementById('ip-account'),
-	  workTime = document.getElementById('workTime');
-
-accountInput.onkeyup = function(e) {
-	if( accountInput.value.length > 6) {
-		document.getElementById('ipa').setAttribute('hidden','hidden');
-		document.getElementById('bc').removeAttribute('disabled');
-	} else {
-		document.getElementById('ipa').removeAttribute('hidden');
-		document.getElementById('bc').setAttribute('disabled','disabled');
-	}
-};
-
-nameInput.onkeyup = function(e) {
-	nameInput.value.length > 0 ? document.getElementById('ipn').setAttribute('hidden','hidden') : document.getElementById('ipn').removeAttribute('hidden');
-};
-
-passwordInput.onkeyup = function(e) {
-	passwordInput.value.length > 7 ? document.getElementById('ip1').setAttribute('hidden','hidden') : document.getElementById('ip1').removeAttribute('hidden');
-};
-
-passwordInput2.onkeyup = function (e) {
-	passwordInput.value !== passwordInput2.value ? document.getElementById('ip2').removeAttribute('hidden') : document.getElementById('ip2').setAttribute('hidden','hidden');
-};
-
-emailInput.onkeyup = function(e) {
-	validateEmail(emailInput.value) ? document.getElementById('ipe').setAttribute('hidden','hidden') : document.getElementById('ipe').removeAttribute('hidden');
-};
-
-$("#bc").click(function() {
-	$.ajax({
-		url: 'api/store/sAccountDB.jsp',
-		type: 'GET',
-		data: {
-			"check"  : "true",
-			"account"	: accountInput.value,
-		},
-	}).done(function (data) {
-		if(data.includes("true") === true) {
-			alert("恭喜!這個帳號可以使用");
-			document.getElementById('final').removeAttribute('disabled');
-		}else if(data.includes("false") === true) {
-			alert("這個帳號已經有人註冊");
-		}
-	});
-}); 
-
 $("#arrangeCheck").click(function() {
 	if($(this).prop("checked")) {//如果全選按鈕有被選擇的話（被選擇是true）
 		$("input[id*='day']").each(function() {
@@ -96,39 +45,15 @@ $("#logOut").click(function() {
 
 document.querySelector('#submit').addEventListener('click', arrangeSubmit);
 document.querySelector('#delete').addEventListener('click', arrangeDelete);
-document.querySelector("#final").addEventListener('click', register);
 document.getElementById('bossArrange').addEventListener('click', bossArrange);
 document.getElementById('calendar').addEventListener('click', calendar);
 document.getElementById('calendarAll').addEventListener('click', calendarAll);
 document.getElementById('calendarSet').addEventListener('click', calendarSet);
 
-function register() {
-	if( nameInput.value.length === 0 || passwordInput.value.length === 0 || passwordInput2.value.length === 0 || emailInput.value.length === 0 || accountInput.value.length === 0) {
-		alert("還有欄位未填");
-	}else if( nameInput.value.length > 0 && passwordInput.value.length > 7 && passwordInput2.value.length > 7 && emailInput.value.length > 0 && accountInput.value.length>6) {
-		$.ajax({
-			url: 'api/store/sAccountDB.jsp',
-			type: 'POST',
-			async: false,
-			data: {
-				"register"  : "true",
-				"account"	: accountInput.value,
-				"password"	: passwordInput.value,
-				"email"	: emailInput.value,
-				"name"	: nameInput.value,
-				"workTime" : workTime.value
-			},
-		}).done(function() {
-			alert("恭喜註冊成功!即將跳回登入頁");
-			window.location = "http://localhost:8080/storebackup/login.jsp";
-		});
-	}
-}
-
 function bossArrange() {
 	let noonAir = "",
 		nightAir = "";
-		
+
 	for(let i = 0 ; i < $("select[id*='workTimeNoon']").length; i++) {
 		if(($("select[id*='workTimeNoon']")[i].value === "" && $("select[id*='twoWorkTimeNoon']")[i].value !== "") || ($("select[id*='workTimeNoon']")[i].value !== "" && $("select[id*='twoWorkTimeNoon']")[i].value === "") || ($("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value && $("select[id*='twoWorkTimeNoon']")[i].value !== "")) {
 			noonAir += (i+1)+"、";
@@ -217,19 +142,14 @@ function bossArrange() {
 	}
 }
 
-function validateEmail(email) {
-	let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	return re.test(String(email).toLowerCase());
-}
-
 function arrangeSubmit() {
 	var day = [];
 	
-	for(let i in $("input[id*='day']")) {
-		if($("input[id*='day']")[i] && $("input[id*='day']")[i].checked === true) {
-			day.push(Number(i)+1);
+	Array.from($("input[id*='day']")).forEach(function(dayCheck, index) {
+		if(dayCheck && dayCheck.checked) {
+			day.push(Number(index)+1);
 		}
-	}
+	});
 	
 	for(let i in $("input[id*='edit']")) {
 		if($("input[id*='edit']")[i]) {
@@ -245,7 +165,6 @@ function arrangeSubmit() {
 	$.ajax({
 		url: 'api/store/sWork.jsp',
 		type: 'POST',
-		async: false,
 		data: {
 			"arrange": "true",
 			"name"  : getCookie('name'),
@@ -271,7 +190,6 @@ function arrangeDelete() {
 	$.ajax({
 		url: 'api/store/sWork.jsp?'+'edit=true&user='+getCookie('user')+'&day='+JSON.stringify(day),
 		type: 'DELETE',
-		async: false,
 	}).done(function() {
 		window.location = "http://localhost:8080/storebackup/lobby.jsp";
 	});
@@ -316,9 +234,9 @@ $(function() {
 				"month"	: calendarO.month,
 			},
 		}).done(function(data) {
-			let morningT = "";
-			let noonT = "";
-			let nightT = "";
+			let morningT = "",
+				noonT = "",
+				nightT = "";
 			for(let i in JSON.parse(data)) {
 				if(i.split("_")[0].includes("morning")) {
 					$("#morningTable")[0].innerHTML += i.split("_")[1]+"："+JSON.parse(data)[i]+"<br>";
@@ -338,14 +256,16 @@ $(function() {
 		$("#div5").attr('hidden', true);
 		$("#div6").attr('hidden', true);
 	}
+	
 	$("#limitTime").text("開放時間："+(calendarO.month+1)+"/"+(calendarO.daysMonth(calendarO.month, calendarO.year)-6)+"～"+(calendarO.month+1)+"/"+(calendarO.daysMonth(calendarO.month, calendarO.year)-1));
 	$("#name").text(getCookie('name'));
 
 	if((calendarO.day < (calendarO.daysMonth(calendarO.month, calendarO.year)-25) || calendarO.day > (calendarO.daysMonth(calendarO.month, calendarO.year)-1) )&& getCookie('identity') === "staff") {
 		$("#calendarSet").attr('hidden',true);
 		$("#alertTime").text("請注意本月排班時間是："+(calendarO.month+1)+"/"+(calendarO.daysMonth(calendarO.month, calendarO.year)-6)+"～"+(calendarO.month+1)+"/"+(calendarO.daysMonth(calendarO.month, calendarO.year)-1));
-	}else if((calendarO.daysMonth(calendarO.month, calendarO.year)-6) <= calendarO.day <= (calendarO.daysMonth(calendarO.month, calendarO.year)-1) && getCookie('identity') === "staff") {
+	} else if((calendarO.daysMonth(calendarO.month, calendarO.year)-6) <= calendarO.day <= (calendarO.daysMonth(calendarO.month, calendarO.year)-1) && getCookie('identity') === "staff") {
 		$("#calendarSet").attr('hidden',false);
 	}
+	
 	calendarO.refreshDate();
 });

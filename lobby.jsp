@@ -122,11 +122,12 @@
 					</div>
 				</div>
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">每月排班</h1>
+					<h1>安排上班人員</h1>
 					<div class="btn-toolbar mb-2 mb-md-0">
 						<h3 id="limitTime">
 						</h3>
 					</div>
+					<input type="button" id="bossArrange" value="送出" hidden></input>
 				</div>
 				<div id="div3" hidden>
 					<h4>選擇下個月可能可以上班的日期</h4>
@@ -175,7 +176,6 @@
 					<input type="button" id="delete" value="刪除"></input>
 				</div>
 				<div id="div5" class="row" hidden>
-					<h4>安排上班人員</h4>
 					<div class="col">
 						<h5>12:00 a.m. ~ 8:00 a.m.(1人/天)</h5>
 						<%
@@ -461,7 +461,6 @@
 						%>
 					</div>
 				</div>
-				<input type="button" id="bossArrange" value="送出" hidden></input>
 				<canvas class="my-4 chartjs-render-monitor" id="myChart" width="866" height="365" style="display: block; width: 866px; height: 365px;"></canvas>
 			</main>
 		</div>

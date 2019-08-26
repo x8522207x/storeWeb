@@ -37,7 +37,7 @@
 			<button class="btn btn-lg btn-primary btn-block margin-top-20" id="final" type="button" disabled>註冊帳號</button>
 		</form>
 	</div>
-	<script src="JS/event.js"></script> 
+	<script src="JS/registerEvent.js"></script> 
 	<style>
 	body {
 	   background-color: #cccccc;
