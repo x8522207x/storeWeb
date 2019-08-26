@@ -17,11 +17,8 @@ Calendar.prototype.daysMonth = function(month, year) {
 	let tmp = year % 4,
 		month_olympic = [31,29,31,30,31,30,31,31,30,31,30,31],
 		month_normal = [31,28,31,30,31,30,31,31,30,31,30,31];
-	if (tmp === 0) {
-		return (month_olympic[month]);
-	} else {
-		return (month_normal[month]);
-	}
+		
+	tmp === 0 ? return (month_olympic[month]) : return (month_normal[month]);
 }
 
 Calendar.prototype.refreshDate = function() {

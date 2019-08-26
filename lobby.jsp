@@ -131,7 +131,7 @@
 				<div id="div3" hidden>
 					<h4>選擇下個月可能可以上班的日期</h4>
 					<%
-						for(int i= 1; i<= daysInMonth; i++) {
+						for(int i = 1; i <= daysInMonth; i++) {
 					%>
 					<input type="checkbox" id= "day<%= i%>"><%= i%></input>
 					<%
@@ -187,14 +187,14 @@
 							StringBuilder advice = new StringBuilder();
 							StringBuilder unadvice = new StringBuilder();
 							StringBuilder decide = new StringBuilder();
-							for(int i= 1; i<= daysInMonth; i++) {
+							for(int i = 1; i <= daysInMonth; i++) {
 						%>
 						<h6><%=i%>(選擇人員：<span>
 							<select id="workTimeMorning<%=i%>">
 								<option value=""></option>
 							<%
 								if(!morningWorker.isEmpty()) {
-									for(int j= 0; j<morningWorker.length(); j++) {
+									for(int j = 0; j < morningWorker.length(); j++) {
 										JSONObject obj = morningWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name")+"("+obj.get("user")+")"+i%>"><%=obj.get("name")+"("+obj.get("user")+")"%></option>
@@ -211,29 +211,29 @@
 								unadvice.delete(0, unadvice.length());
 								decide.delete(0, decide.length());
 								if(!workerC.isEmpty()) {
-									for(int j= 0; j< workerC.length(); j++) {
+									for(int j = 0; j < workerC.length(); j++) {
 										JSONObject obj = workerC.getJSONObject(j);
 										workerChoose.add(obj.get("name").toString()+"("+obj.get("user")+")");//這一天有誰可以工作
 									}
 								}
 								if(!decidePeople.isEmpty()) {
-									for(int j= 0; j< decidePeople.length(); j++) {
+									for(int j = 0; j < decidePeople.length(); j++) {
 										JSONObject obj = decidePeople.getJSONObject(j);
 										decide.append(obj.get("name")+"("+obj.get("user")+")");
 									}
 								}
 								if(!morningWorker.isEmpty()) {
-									for(int j= 0; j< morningWorker.length(); j++) {
+									for(int j = 0; j < morningWorker.length(); j++) {
 										JSONObject obj = morningWorker.getJSONObject(j);
 										worker.add(obj.get("name").toString()+"("+obj.get("user")+")");//工作時間是早上的人
 									}
 								}
 								if(workerChoose.size() != 0) {
-									for(int j= 0; j< workerChoose.size(); j++) {
+									for(int j = 0; j < workerChoose.size(); j++) {
 										advice.append(workerChoose.get(j)+"、");
 									}
-									for(int k= 0;k< workerChoose.size(); k++) {
-										for(int j= 0; j< worker.size(); j++) {
+									for(int k = 0; k < workerChoose.size(); k++) {
+										for(int j = 0; j < worker.size(); j++) {
 											if(worker.get(j).equals(workerChoose.get(k))) {
 												worker.remove(j);
 												break;
@@ -241,7 +241,7 @@
 										}
 									}
 								}
-								for(int j= 0; j< worker.size(); j++) {
+								for(int j = 0; j < worker.size(); j++) {
 									unadvice.append(worker.get(j)+"、");
 								}
 								advice = advice.length() > 0 ? new StringBuilder(new StringBuilder(advice.substring(0, advice.length() - 1))) : advice;
@@ -269,14 +269,14 @@
 						<h5>8:00 a.m. ~ 4:00 p.m.(2人/天)</h5>
 						<%
 							JSONArray noonWorker = a.getData("SELECT `user`,`name` FROM `staff-account` WHERE `workTime` = 'noon'");
-							for(int i= 1; i<= daysInMonth; i++) {
+							for(int i = 1; i <= daysInMonth; i++) {
 						%>
 						<h6><%=i%>(選擇人員：<span>
 							<select id="workTimeNoon<%=i%>">
 								<option value=""></option>
 							<%
 								if(!noonWorker.isEmpty()) {
-									for(int j= 0; j<noonWorker.length(); j++) {
+									for(int j = 0; j < noonWorker.length(); j++) {
 										JSONObject obj = noonWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
@@ -289,7 +289,7 @@
 								<option value=""></option>
 							<%
 								if(!noonWorker.isEmpty()) {
-									for(int j= 0; j<noonWorker.length(); j++) {
+									for(int j = 0; j < noonWorker.length(); j++) {
 										JSONObject obj = noonWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"+i%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
@@ -306,29 +306,29 @@
 								unadvice.delete(0, unadvice.length());
 								decide.delete(0, decide.length());
 								if(!workerC.isEmpty()) {
-									for(int j= 0; j<workerC.length(); j++) {
+									for(int j = 0; j < workerC.length(); j++) {
 										JSONObject obj = workerC.getJSONObject(j);
 										workerChoose.add(obj.get("name").toString()+"("+obj.get("user")+")");//這一天有誰可以工作
 									}
 								}
 								if(!decidePeople.isEmpty()) {
-									for(int j= 0; j<decidePeople.length(); j++) {
+									for(int j = 0; j < decidePeople.length(); j++) {
 										JSONObject obj = decidePeople.getJSONObject(j);
 										decide.append(obj.get("name").toString()+"("+obj.get("user")+")"+"、");
 									}
 								}
 								if(!noonWorker.isEmpty()) {
-									for(int j= 0; j<noonWorker.length(); j++) {
+									for(int j = 0; j < noonWorker.length(); j++) {
 										JSONObject obj = noonWorker.getJSONObject(j);
 										worker.add(obj.get("name").toString()+"("+obj.get("user")+")");//工作時間是早上的人
 									}
 								}
 								if(workerChoose.size() != 0) {				
-									for(int j= 0; j< workerChoose.size(); j++) {
+									for(int j = 0; j < workerChoose.size(); j++) {
 										advice.append(workerChoose.get(j)+"、");
 									}
-									for(int k= 0;k< workerChoose.size(); k++) {
-										for(int j= 0; j<worker.size(); j++) {
+									for(int k = 0; k < workerChoose.size(); k++) {
+										for(int j = 0; j < worker.size(); j++) {
 											if(worker.get(j).equals(workerChoose.get(k))) {
 												worker.remove(j);
 												break;
@@ -336,7 +336,7 @@
 										}
 									}
 								}
-								for(int j= 0; j<worker.size(); j++) {
+								for(int j = 0; j < worker.size(); j++) {
 									unadvice.append(worker.get(j)+"、");
 								}
 								advice = advice.length() > 0 ? new StringBuilder(advice.substring(0, advice.length() - 1)) : advice;
@@ -365,14 +365,14 @@
 						<h5>4:00 p.m. ~ 12:00 a.m.(2人/天)</h5>
 						<%
 							JSONArray nightWorker =a.getData("SELECT `user`,`name` FROM `staff-account` WHERE `workTime` = 'night'");
-							for(int i= 1; i<= daysInMonth; i++) {
+							for(int i = 1; i <= daysInMonth; i++) {
 						%>
 						<h6><%=i%>(選擇人員：<span>
 							<select id="workTimeNight<%=i%>">
 								<option value=""></option>
 							<%
 								if(!nightWorker.isEmpty()) {
-									for(int j= 0; j<nightWorker.length(); j++) {
+									for(int j = 0; j < nightWorker.length(); j++) {
 										JSONObject obj = nightWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
@@ -385,7 +385,7 @@
 								<option value=""></option>
 							<%
 								if(!nightWorker.isEmpty()) {
-									for(int j= 0; j<nightWorker.length(); j++) {
+									for(int j = 0; j < nightWorker.length(); j++) {
 										JSONObject obj = nightWorker.getJSONObject(j);
 							%>
 								<option value="<%=obj.get("name").toString()+"("+obj.get("user")+")"+i%>"><%=obj.get("name").toString()+"("+obj.get("user")+")"%></option>
@@ -402,29 +402,29 @@
 								unadvice.delete(0, unadvice.length());
 								decide.delete(0, decide.length());
 								if(!workerC.isEmpty()) {
-									for(int j= 0; j<workerC.length(); j++) {
+									for(int j = 0; j < workerC.length(); j++) {
 										JSONObject obj = workerC.getJSONObject(j);
 										workerChoose.add(obj.get("name").toString()+"("+obj.get("user")+")");//這一天有誰可以工作
 									}
 								}
 								if(!decidePeople.isEmpty()) {
-									for(int j= 0; j<decidePeople.length(); j++) {
+									for(int j = 0; j < decidePeople.length(); j++) {
 										JSONObject obj = decidePeople.getJSONObject(j);
 										decide.append(obj.get("name").toString()+"("+obj.get("user")+")"+"、");
 									}
 								}
 								if(!nightWorker.isEmpty()) {
-									for(int j= 0; j<nightWorker.length(); j++) {
+									for(int j = 0; j < nightWorker.length(); j++) {
 										JSONObject obj = nightWorker.getJSONObject(j);
 										worker.add(obj.get("name").toString()+"("+obj.get("user")+")");//工作時間是早上的人
 									}
 								}
 								if(workerChoose.size() != 0) {				
-									for(int j= 0; j< workerChoose.size(); j++) {
+									for(int j = 0; j < workerChoose.size(); j++) {
 										advice.append(workerChoose.get(j)+"、");
 									}
-									for(int k= 0;k< workerChoose.size(); k++) {
-										for(int j= 0; j<worker.size(); j++) {
+									for(int k = 0;k < workerChoose.size(); k++) {
+										for(int j = 0; j < worker.size(); j++) {
 											if(worker.get(j).equals(workerChoose.get(k))) {
 												worker.remove(j);
 												break;
@@ -432,7 +432,7 @@
 										}
 									}
 								}
-								for(int j= 0; j<worker.size(); j++) {
+								for(int j = 0; j < worker.size(); j++) {
 									unadvice.append(worker.get(j)+"、");
 								}
 								
