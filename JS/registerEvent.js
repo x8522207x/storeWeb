@@ -7,7 +7,7 @@ const nameInput = document.getElementById('ip-name'),
 
 document.querySelector("#final").addEventListener('click', register);	  
 	  
-accountInput.onkeyup = function(e) {
+accountInput.onkeyup = e => {
 	if( accountInput.value.length > 6) {
 		document.getElementById('ipa').setAttribute('hidden','hidden');
 		document.getElementById('bc').removeAttribute('disabled');
@@ -17,23 +17,18 @@ accountInput.onkeyup = function(e) {
 	}
 };
 
-nameInput.onkeyup = function(e) {
-	nameInput.value.length > 0 ? document.getElementById('ipn').setAttribute('hidden','hidden') : document.getElementById('ipn').removeAttribute('hidden');
-};
+nameInput.onkeyup = e => nameInput.value.length > 0 ? document.getElementById('ipn').setAttribute('hidden','hidden') : document.getElementById('ipn').removeAttribute('hidden');
 
-passwordInput.onkeyup = function(e) {
-	passwordInput.value.length > 7 ? document.getElementById('ip1').setAttribute('hidden','hidden') : document.getElementById('ip1').removeAttribute('hidden');
-};
 
-passwordInput2.onkeyup = function (e) {
-	passwordInput.value !== passwordInput2.value ? document.getElementById('ip2').removeAttribute('hidden') : document.getElementById('ip2').setAttribute('hidden','hidden');
-};
+passwordInput.onkeyup = e => passwordInput.value.length > 7 ? document.getElementById('ip1').setAttribute('hidden','hidden') : document.getElementById('ip1').removeAttribute('hidden');
 
-emailInput.onkeyup = function(e) {
-	validateEmail(emailInput.value) ? document.getElementById('ipe').setAttribute('hidden','hidden') : document.getElementById('ipe').removeAttribute('hidden');
-};
 
-$("#bc").click(function() {
+passwordInput2.onkeyup = e => passwordInput.value !== passwordInput2.value ? document.getElementById('ip2').removeAttribute('hidden') : document.getElementById('ip2').setAttribute('hidden','hidden');
+
+
+emailInput.onkeyup = e => validateEmail(emailInput.value) ? document.getElementById('ipe').setAttribute('hidden','hidden') : document.getElementById('ipe').removeAttribute('hidden');
+
+$("#bc").click(() => {
 	$.ajax({
 		url: 'api/store/sAccountDB.jsp',
 		type: 'GET',
@@ -41,11 +36,11 @@ $("#bc").click(function() {
 			"check"  : "true",
 			"account"	: accountInput.value,
 		},
-	}).done(function (data) {
-		if(data.includes("true") === true) {
+	}).done(data => {
+		if(data.includes("true")) {
 			alert("恭喜!這個帳號可以使用");
 			document.getElementById('final').removeAttribute('disabled');
-		}else if(data.includes("false") === true) {
+		}else if(data.includes("false")) {
 			alert("這個帳號已經有人註冊");
 		}
 	});
@@ -72,7 +67,7 @@ function register() {
 				"name"	: nameInput.value,
 				"workTime" : workTime.value
 			},
-		}).done(function() {
+		}).done(() => {
 			alert("恭喜註冊成功!即將跳回登入頁");
 			window.location = "http://localhost:8080/storebackup/login.jsp";
 		});

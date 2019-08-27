@@ -8,35 +8,34 @@ function Calendar(dayID, ctitleID, cyearID) {
 };
 
 
-Calendar.prototype.dayStart = function(month, year) {
+Calendar.prototype.dayStart = (month, year) => {
 	let tmpDate = new Date(year, month, 1);
-	return (tmpDate.getDay());
+	return tmpDate.getDay();
 }
 
-Calendar.prototype.daysMonth = function(month, year) {
+Calendar.prototype.daysMonth = (month, year) => {
 	let tmp = year % 4,
 		month_olympic = [31,29,31,30,31,30,31,31,30,31,30,31],
 		month_normal = [31,28,31,30,31,30,31,31,30,31,30,31];
 		
-	return tmp === 0 ? (month_olympic[month]) : (month_normal[month]);
+	return tmp === 0 ? month_olympic[month] : month_normal[month];
 }
 
-Calendar.prototype.refreshDate = function() {
+Calendar.prototype.refreshDate = () => {
 	const holder = document.getElementById(this.dayID),
 		  ctitle = document.getElementById(this.ctitleID),
 		  cyear = document.getElementById(this.cyearID),
 		  month_name = ["January","Febrary","March","April","May","June","July","Auguest","September","October","November","December"];
 	let str = "",
 		totalDay = this.daysMonth(this.month, this.year), 
-		firstDay = this.dayStart(this.month, this.year), 
-		myclass;
+		firstDay = this.dayStart(this.month, this.year);
 	
 	for(let i= 1 ; i < firstDay; i++) { 
-		str += "<li id=></li>"; 
+		str += `<li id=></li>`; 
 	}
 	
 	for(let i= 1 ; i <= totalDay; i++) {
-		str += "<li id="+this.year+"_"+(this.month+1)+"_"+i+">"+i+"</li>";
+		str += `<li id=${this.year}_${this.month+1}_${i}>${i}</li>`;
 	}
 	
 	holder.innerHTML = str; 
@@ -52,9 +51,9 @@ Calendar.prototype.refreshDate = function() {
 			"month"	: this.month,
 			"year"	: this.year,
 		},
-	}).done(function (data) {
+	}).done(data => {
 		for(let i = 0; i < data.split("、").length-1; i++) {
-			$("#"+this.year+"_"+(this.month+1)+"_"+data.split("、")[i])[0].className += "green-small";
+			$(`#${this.year}_${this.month+1}_${data.split("、")[i]}`)[0].className += "green-small";
 		}
 	});
 }

@@ -96,7 +96,7 @@
 					</div>
 				</div>
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1 class="h2">本月班表</h1>
+					<h2>本月班表</h2>
 				</div>
 				<div>
 				<h3>早班(12:00 a.m. ~ 8:00 a.m.)</h1>
@@ -122,7 +122,7 @@
 					</div>
 				</div>
 				<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-					<h1>安排上班人員</h1>
+					<h2>安排上班人員</h2>
 					<div class="btn-toolbar mb-2 mb-md-0">
 						<h3 id="limitTime">
 						</h3>
