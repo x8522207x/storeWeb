@@ -16,8 +16,7 @@
 		<script src="https://cdn.jsdelivr.net/npm/vue"></script>
 		<script>
 		function getCookie(cname) {
-			let name = cname + "=";
-			let ca = document.cookie.split(';');
+			let [name, ca] = [cname + "=", document.cookie.split(';')];
 			for (let i in ca) {
 				let c = ca[i];
 				while (c.charAt(0) === ' ') c = c.substring(1);

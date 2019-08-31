@@ -23,7 +23,7 @@ if(register.equals("true")) {
 }else if(check.equals("true")) {
 	jar = a.getData("SELECT `account` FROM `staff-account`");
 	if(!jar.isEmpty()) {
-		for(int i= 0;i<jar.length();i++) {
+		for(int i = 0; i < jar.length(); i++) {
 			result = true;
 			JSONObject obj = jar.getJSONObject(i);
 			if(obj.get("account").equals(account)) {
@@ -44,7 +44,7 @@ if(register.equals("true")) {
 	jar = a.getData("SELECT `user`,`account`,`password`,`name` FROM `staff-account`");
 	boolean alive = false;
 	if(!jar.isEmpty()) {
-		for(int i= 0;i<jar.length();i++) {
+		for(int i = 0; i < jar.length(); i++) {
 			JSONObject obj = jar.getJSONObject(i);	
 			if(account.equals(obj.get("account"))) {
 				if(password.equals(obj.get("password"))) {

@@ -1,9 +1,4 @@
-const nameInput = document.getElementById('ip-name'),
-	  passwordInput = document.getElementById('ip-password'),
-	  passwordInput2 = document.getElementById('ip-password-2'),
-	  emailInput = document.getElementById('ip-email'),
-	  accountInput = document.getElementById('ip-account'),
-	  workTime = document.getElementById('workTime');
+const [nameInput, passwordInput, passwordInput2, emailInput, accountInput, workTime] = document.getElementById('ip-name'), document.getElementById('ip-password'), document.getElementById('ip-password-2'), document.getElementById('ip-email'), document.getElementById('ip-account'), document.getElementById('workTime')];
 
 document.querySelector("#final").addEventListener('click', register);	  
 	  

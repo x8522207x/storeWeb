@@ -51,8 +51,7 @@ document.getElementById('calendarAll').addEventListener('click', calendarAll);
 document.getElementById('calendarSet').addEventListener('click', calendarSet);
 
 function bossArrange() {
-	let noonAir = "",
-		nightAir = "";
+	let [noonAir, nightAir] = ["", ""];
 
 	for(let i = 0 ; i < $("select[id*='workTimeNoon']").length; i++) {
 		if(($("select[id*='workTimeNoon']")[i].value === "" && $("select[id*='twoWorkTimeNoon']")[i].value !== "") || ($("select[id*='workTimeNoon']")[i].value !== "" && $("select[id*='twoWorkTimeNoon']")[i].value === "") || ($("select[id*='workTimeNoon']")[i].value === $("select[id*='twoWorkTimeNoon']")[i].value && $("select[id*='twoWorkTimeNoon']")[i].value !== "")) {
@@ -64,8 +63,7 @@ function bossArrange() {
 	}
 	
 	if(noonAir.length > 0 || nightAir.length > 0) {
-		noonAir = noonAir.substring(0, noonAir.length-1);
-		nightAir = nightAir.substring(0, nightAir.length-1);
+		[noonAir, nightAir] = [noonAir.substring(0, noonAir.length-1), nightAir.substring(0, nightAir.length-1)];
 		alert(`午班：${noonAir} 以及 晚班：${nightAir} 有少派人 或者 重複指派人`);
 	} else {
 		let name = [];
@@ -228,9 +226,7 @@ $(() => {
 				"month"	: calendarO.month,
 			},
 		}).done(data => {
-			let morningT = "",
-				noonT = "",
-				nightT = "";
+			let [morningT, noonT, nightT] = ["", "", ""];
 			for(let i in JSON.parse(data)) {
 				if(i.split("_")[0].includes("morning")) {
 					$("#morningTable")[0].innerHTML += `${i.split("_")[1]}：${JSON.parse(data)[i]}<br>`;

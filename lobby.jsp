@@ -14,9 +14,7 @@
 %>
 <body>
 	<script>
-		let user = getCookie('user'),
-			name = getCookie('name'),
-			identity = getCookie('identity');
+		let [user, name, identity] = [getCookie('user'), getCookie('name'), getCookie('identity')];
 		if(user === "" && identity === "" && name === "") {
 			let result = alert("請登入");
 			window.location = "http://localhost:8080/storebackup/login.jsp";

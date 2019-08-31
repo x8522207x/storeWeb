@@ -25,20 +25,17 @@
 		var identity = "";
 		
 		function staffLog() {
-			identity = "staff";
-			$("#role")[0].textContent = "員工";
+			[identity, $("#role")[0].textContent] = ["staff", "員工"];
 			$("#loginDiv").attr('hidden',false);
 		}
 		
 		function bossLog() {
-			identity = "boss";
-			$("#role")[0].textContent = "老闆";
+			[identity, $("#role")[0].textContent] = ["boss", "老闆"];
 			$("#loginDiv").attr('hidden',false);
 		}
 		
 		$("#loginButton").click(function() {
-			let redirect = false;
-			let user = "";
+			let [redirect, user] = [false, ""];
 			if(identity === "staff") {
 				$.ajax({
 					url: 'api/store/sAccountDB.jsp',
@@ -51,9 +48,7 @@
 					},
 				}).done(function (data) {
 					if(data.includes("true") === true) {
-						name = data.split(";")[1];
-						user = data.split(";")[2];
-						redirect = true;
+						[name, user, redirect] = [data.split(";")[1], data.split(";")[2], true];
 					}else if(data.includes("pfalse") === true) {
 						alert("密碼輸入錯誤");
 					}else if(data.includes("afalse") === true) {
@@ -72,9 +67,7 @@
 					},
 				}).done(function (data) {
 					if(data.includes("true") === true) {
-						name = data.split(";")[1];
-						user = data.split(";")[2];
-						redirect = true;
+						[name, user, redirect] = [data.split(";")[1], data.split(";")[2], true];
 					}else if(data.includes("pfalse") === true) {
 						alert("密碼輸入錯誤");
 					}else if(data.includes("afalse") === true) {
