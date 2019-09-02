@@ -22,7 +22,7 @@
 	</script>
 	<nav class="navbar navbar-expand-lg navbar-light bg-light">
 		<a class="navbar-brand" href="lobby.jsp">超商店員排班系統</a>
-		<h4 id="alertTime" style="text-align: center;color: red;"></h4>
+		<h4 id="alertTime" style="position:absolute;left:200px;text-align:center;color:red;"></h4>
 		<h4 id="name" style="position:absolute;right:80px;"></h4>
 		<a class="btn btn-outline-primary" id="logOut" style="position:absolute;right:10px;">登出</a>
 	</nav>
