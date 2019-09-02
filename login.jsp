@@ -26,11 +26,13 @@
 		
 		function staffLog() {
 			[identity, $("#role")[0].textContent] = ["staff", "員工"];
+			setCookie('identity',identity, 30);
 			$("#loginDiv").attr('hidden',false);
 		}
 		
 		function bossLog() {
 			[identity, $("#role")[0].textContent] = ["boss", "老闆"];
+			setCookie('identity',identity, 30);
 			$("#loginDiv").attr('hidden',false);
 		}
 		
@@ -77,7 +79,6 @@
 			}
 			
 			if(redirect === true) {
-				setCookie('identity',identity, 30);
 				setCookie('name',name, 30);
 				setCookie('user',user, 30);
 				$(location).attr('href','http://localhost:8080/storebackup/lobby.jsp')

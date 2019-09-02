@@ -253,7 +253,7 @@ $(() => {
 	if((calendarO.day < (calendarO.daysMonth(calendarO.month, calendarO.year)-25) || calendarO.day > (calendarO.daysMonth(calendarO.month, calendarO.year)-1) )&& getCookie('identity') === "staff") {
 		$("#calendarSet").attr('hidden',true);
 		$("#alertTime").text(`請注意本月排班時間是：${calendarO.month+1}/${calendarO.daysMonth(calendarO.month, calendarO.year)-6}～${calendarO.month+1}/${calendarO.daysMonth(calendarO.month, calendarO.year)-1}`);
-	} else if((calendarO.daysMonth(calendarO.month, calendarO.year)-6) <= calendarO.day <= (calendarO.daysMonth(calendarO.month, calendarO.year)-1) && getCookie('identity') === "staff") {
+	} else if((calendarO.daysMonth(calendarO.month, calendarO.year)-6) <= calendarO.day || calendarO.day <= (calendarO.daysMonth(calendarO.month, calendarO.year)-1) && getCookie('identity') === "staff") {
 		$("#calendarSet").attr('hidden',false);
 	}
 	
