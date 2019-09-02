@@ -18,7 +18,7 @@
 	</form>
 	<script>
 		var identity = "";
-		
+		document.addEventListener('DOMContentLoaded', staffLog);
 		function staffLog() {
 			[identity, $("#role")[0].textContent] = ["staff", "員工"];
 			setCookie('identity',identity, 30);
