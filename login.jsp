@@ -85,13 +85,21 @@
 	</script>
 	<style>
 	body {
-	   background-image: url("image/loginStore.jpg");
-	   background-size: 100% 100%;
+		background-image: url("image/loginStore.jpg");
+		background-size: cover;
+		background-position: center;
 	}
+	
 	.container {
-		position: fixed;
+		position: center;
 		top: 0;
 		left: 10%;
+	}
+	
+	* {
+		padding: 0;
+		margin: 0;
+		box-sizing: border-box;
 	}
 	</style>
 </body>

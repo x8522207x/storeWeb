@@ -475,18 +475,22 @@
 			background:#fff;
 			box-shadow:0px 1px 1px rgba(0,0,0,0.1);
 		}
+		
 		.green, .green-small{
 			text-align:center;
 		}
+		
 		.next, .prev{
 			cursor: pointer;
 		}
+		
 		.body-list ul{
 			width:100%;
 			font-family:arial;
 			font-weight:bold;
 			font-size:14px;
 		}
+		
 		.body-list ul li{
 			width:14.28%;
 			height:36px;
@@ -497,12 +501,21 @@
 			float:left;
 			text-align:center;
 		}
+		
 		.green, .green-small{
 			color:#6ac13c; /*绿色*/
 		}
+		
+		* {
+			padding: 0;
+			margin: 0;
+			box-sizing: border-box;
+		}
+		
 		body {
 		   background-image: url("image/lobby.jpg");
-		   background-size: 100% 100%;
+		   background-size: cover;
+			 background-position: center;
 		}
 	</style>
 </body>
